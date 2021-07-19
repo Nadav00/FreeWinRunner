@@ -1,0 +1,57 @@
+{
+  "Name": "SuiteN",
+  "ID": 0,
+  "SuiteFilePath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\SuiteN.json",
+  "Environments": null,
+  "Tests": [
+    {
+      "Type": 0,
+      "Status": 1,
+      "Name": "Test1",
+      "ID": 0.0,
+      "MaxSeconds": 3600.0,
+      "Selected": false,
+      "Activated": false,
+      "ScriptPath": null,
+      "Resources": [
+        {
+          "ResourceJsonFilePath": "\\Example_Env1\\Resources\\Example_Setup1\\Machine1.json",
+          "NickName": null,
+          "Registered": true,
+          "Locked": false
+        },
+        {
+          "ResourceJsonFilePath": "\\Example_Env1\\Resources\\Example_Setup1\\Machine2.json",
+          "NickName": null,
+          "Registered": true,
+          "Locked": false
+        }
+      ]
+    },
+    {
+      "Type": 0,
+      "Status": 1,
+      "Name": "Test2",
+      "ID": 0.0,
+      "MaxSeconds": 3600.0,
+      "Selected": false,
+      "Activated": false,
+      "ScriptPath": null,
+      "Resources": [
+        {
+          "ResourceJsonFilePath": "\\Example_Env1\\Resources\\Example_Setup2\\Machine3.json",
+          "NickName": null,
+          "Registered": true,
+          "Locked": false
+        },
+        {
+          "ResourceJsonFilePath": "\\Example_Env1\\Resources\\Example_Setup2\\Machine4.json",
+          "NickName": null,
+          "Registered": true,
+          "Locked": false
+        }
+      ]
+    }
+  ],
+  "Status": 1
+}

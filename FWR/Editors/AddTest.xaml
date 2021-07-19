@@ -1,0 +1,44 @@
+﻿<Window x:Class="FWR.Editors.AddTest"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FWR.Editors"
+        mc:Ignorable="d"
+        Title="Add Test" Height="450" Width="757.78">
+    <Grid>
+        <WrapPanel HorizontalAlignment="Left" Height="25" Margin="4,7,0,0" VerticalAlignment="Top" Width="736">
+            <Button x:Name="browsePathButton" Content="Browse" Click="BrowseScriptPath_Click" Width="60"/>
+            <Label x:Name="pathCaption" Content="Script Path:" />
+            <TextBox x:Name="pathTextbox" VerticalContentAlignment="Bottom" Width="601"/>
+        </WrapPanel>
+        <WrapPanel HorizontalAlignment="Left" Height="33" Margin="4,37,0,0" VerticalAlignment="Top" Width="736">
+            <Button x:Name="saveButton" Content="Save" Width="60" FontWeight="Bold" Click="SaveButton_Click" />
+            <Label x:Name="nameCaption" Content="Name:" />
+            <TextBox x:Name="nameTextBox" Text="New Test"  VerticalContentAlignment="Bottom" Width="163"/>
+            <Button x:Name="browseFolderButton" Content="Browse" Click="BrowseFolderButton_Click" Width="60"/>
+            <Label x:Name="folderCaption" Content="Folder:" />
+            <TextBox x:Name="folderTextbox" VerticalContentAlignment="Bottom" Width="358"/>
+        </WrapPanel>
+        <WrapPanel HorizontalAlignment="Left" Height="266" VerticalAlignment="Top" Width="738" Margin="4,143,0,0">
+            <DataGrid Margin="0,0,0,0" x:Name="resourcesGrid" DataContext="{Binding RelativeSource={RelativeSource Self}}" MouseLeftButtonUp="RowClick" ItemsSource="{Binding ''}" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" IsReadOnly="True"  AutoGenerateColumns="False" Height="266" Width="741" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Resource JSON File" Binding="{Binding ResourceJsonFilePath}"  IsReadOnly="True"  Width="600"  FontFamily="Tahoma" />
+                    <DataGridTextColumn Header="Register" Binding="{Binding Registered}"  IsReadOnly="True"  Width="55"  FontFamily="Tahoma" />
+                    <DataGridTextColumn Header="Lock" Binding="{Binding Locked}"  IsReadOnly="True"  Width="55"  FontFamily="Tahoma" />
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </WrapPanel>
+        <WrapPanel HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="336" Margin="4,107,0,0">
+            <TextBox x:Name="searchResourceTextbox" Text="Search resource"  VerticalContentAlignment="Bottom" Height="22" Width="229" PreviewMouseLeftButtonDown="SearchResourceTextbox_Clicked" TextChanged="SearchResourceTextbox_TextChanged" />
+            <Button x:Name="reloadResources_Copy1" Content="Reload" Width="50" Height="21" Click="ReloadResources_Click"/>
+        </WrapPanel>
+        <WrapPanel HorizontalAlignment="Left" Height="32" Margin="4,70,0,0" VerticalAlignment="Top" Width="736">
+            <Label x:Name="MaxTimeoutLabel" Content="Max. timeout:"/>
+            <TextBox x:Name="TimeoutTextBox" VerticalContentAlignment="Bottom" Width="100" />
+            <Label x:Name="miliAndConfigurationLabel" Content="sec.       Configuration:"/>
+            <TextBox x:Name="configurationTextBox_Change_to_dropdown" VerticalContentAlignment="Bottom" Width="313" />
+        </WrapPanel>
+    </Grid>
+</Window>

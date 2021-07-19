@@ -1,0 +1,36 @@
+﻿<Window x:Class="FWR.Editors.SuiteEdit"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FWR.Editors"
+        mc:Ignorable="d"
+        Title="Suite Editor" Height="450" Width="800">
+    <Grid>
+        <WrapPanel>
+            <Label x:Name="CycleCaption" Content="Cycle:"  Margin="0,0,0,0"/>
+            <Label x:Name="CycleName" Content="" Margin="0,0,0,0" Width="606" />
+        </WrapPanel>
+        <WrapPanel HorizontalAlignment="Left" Height="25" Margin="4,31,-4,0" VerticalAlignment="Top" Width="792">
+            <Button x:Name="browseFolderButton" Content="Browse" Click="BrowseFolderButton_Click" Width="60"/>
+            <Label x:Name="folderCaption" Content="Folder:" />
+            <TextBox x:Name="folderTextbox" VerticalContentAlignment="Bottom" Width="669"/>
+        </WrapPanel>
+        <WrapPanel HorizontalAlignment="Left" Height="33" Margin="4,61,-4,0" VerticalAlignment="Top" Width="792">
+            <Button x:Name="saveButton" Content="Save" Width="60" FontWeight="Bold" Click="SaveButton_Click"/>
+            <Label x:Name="nameCaption" Content="Name:" />
+            <TextBox x:Name="nameTextBox" Text="New Suite"  VerticalContentAlignment="Bottom" Width="120"/>
+        </WrapPanel>
+        <WrapPanel HorizontalAlignment="Left" Height="26" Margin="4,94,0,0" VerticalAlignment="Top" Width="772">
+            <Button x:Name="addTestButton" Content="+" Width="25" Click="AddTestButton_Click" />
+            <Button x:Name="removeTestsButton" Margin="10,0,10,0" Width="25" Content="-"  />
+            <Label x:Name="testsLabel" Content="Tests" />
+        </WrapPanel>
+        <DataGrid Margin="10,125,10,10" x:Name="testsGrid" DataContext="{Binding RelativeSource={RelativeSource Self}}"  ItemsSource="{Binding }" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserReorderColumns="False" IsReadOnly="True"  AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ID}"  IsReadOnly="True"  Width="100"  FontFamily="Tahoma" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}"  IsReadOnly="True"  Width="100"  FontFamily="Tahoma" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

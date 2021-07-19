@@ -1,0 +1,31 @@
+{
+  "Name": "suite1",
+  "ID": 0,
+  "SuiteFilePath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\suite1.json",
+  "Environments": null,
+  "Tests": [
+    {
+      "Type": 0,
+      "Status": 1,
+      "Name": "test1",
+      "ID": 0.0,
+      "MaxSeconds": 3600.0,
+      "Selected": false,
+      "Activated": false,
+      "ScriptPath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\Example_Project1\\Scripts\\Example1\\Example1TestScript1.ps1",
+      "Resources": []
+    },
+    {
+      "Type": 0,
+      "Status": 1,
+      "Name": "test2",
+      "ID": 0.0,
+      "MaxSeconds": 3600.0,
+      "Selected": false,
+      "Activated": false,
+      "ScriptPath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\Example_Project1\\Scripts\\Example1\\Example1TestScript1.ps1",
+      "Resources": []
+    }
+  ],
+  "Status": 1
+}

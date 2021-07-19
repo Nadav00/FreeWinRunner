@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="FWR.UI_Controls.TestInSuiteInQueueControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FWR.UI_Controls"
+             Background="GhostWhite"
+             mc:Ignorable="d" Width="Auto" Height="Auto">
+    <StackPanel Margin="0,0,0,0">
+        <WrapPanel HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="Auto" >
+            <Expander x:Name="expander" Width="25" Height="23" PreviewMouseDown="Expander_PreviewMouseDown" />
+            <CheckBox x:Name="selectedCheckbox" VerticalAlignment="Center" IsChecked="True" Click="Checkbox_Clicked"/>
+            <Button x:Name="Log" PreviewMouseLeftButtonDown="Test_PreviewMouseLeftButtonDown" Content="Log" Click="Click_Log"/>
+            <Label x:Name="nameCaptionLabel" Content="Test:"/>
+            <Label x:Name="nameLabel" Content="" Width="300" />
+            <Label x:Name="ConfigurationCaptionLabel" Content="Configuration:"/>
+            <Label x:Name="ConfigurationLabel" Content="" Width="Auto" />
+        </WrapPanel>
+        <Grid x:Name="exeWindowGrid" Height="400" Width="800" VerticalAlignment="Top">
+        </Grid>
+    </StackPanel>
+</UserControl>

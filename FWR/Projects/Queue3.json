@@ -1,0 +1,172 @@
+{
+  "Name": "Black Architect",
+  "Cycles": [
+    {
+      "Name": "New Cycle",
+      "Suites": [
+        {
+          "Name": "s1",
+          "ID": 0,
+          "SuiteFilePath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\s1.json",
+          "Environments": null,
+          "Tests": [
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "t1",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": true,
+              "Activated": false,
+              "ScriptPath": null,
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            },
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "t2",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": false,
+              "Activated": false,
+              "ScriptPath": null,
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            }
+          ],
+          "Status": 1,
+          "TotalSecondsRunning": 0,
+          "logFilePath": null
+        },
+        {
+          "Name": "s1",
+          "ID": 0,
+          "SuiteFilePath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\s1.json",
+          "Environments": null,
+          "Tests": [
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "t1",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": true,
+              "Activated": false,
+              "ScriptPath": null,
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            },
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "t2",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": false,
+              "Activated": false,
+              "ScriptPath": null,
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            }
+          ],
+          "Status": 1,
+          "TotalSecondsRunning": 0,
+          "logFilePath": null
+        },
+        {
+          "Name": "s1",
+          "ID": 0,
+          "SuiteFilePath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\s1.json",
+          "Environments": null,
+          "Tests": [
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "t1",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": true,
+              "Activated": false,
+              "ScriptPath": null,
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            },
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "t2",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": false,
+              "Activated": false,
+              "ScriptPath": null,
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            }
+          ],
+          "Status": 1,
+          "TotalSecondsRunning": 0,
+          "logFilePath": null
+        },
+        {
+          "Name": "s1",
+          "ID": 0,
+          "SuiteFilePath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\s1.json",
+          "Environments": null,
+          "Tests": [
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "t1",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": true,
+              "Activated": false,
+              "ScriptPath": null,
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            },
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "t2",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": false,
+              "Activated": false,
+              "ScriptPath": null,
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            }
+          ],
+          "Status": 1,
+          "TotalSecondsRunning": 0,
+          "logFilePath": null
+        }
+      ],
+      "ID": 1,
+      "Active": true,
+      "Status": 1,
+      "CycleWorker": null,
+      "TotalSecondsRunning": 0,
+      "logFilePath": null
+    }
+  ]
+}

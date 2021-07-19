@@ -1,0 +1,68 @@
+{
+  "Name": "Suite-Tamir",
+  "ID": 0,
+  "SuiteFilePath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\Suite-Tamir.json",
+  "Environments": null,
+  "Tests": [
+    {
+      "Type": 0,
+      "Status": 1,
+      "Name": "Test1",
+      "ID": 0.0,
+      "MaxSeconds": 3600.0,
+      "Selected": false,
+      "Activated": false,
+      "ScriptPath": null,
+      "Resources": [
+        {
+          "ResourceJsonFilePath": "\\Example_Env1\\Resources\\Example_Setup1\\Machine1.json",
+          "NickName": "",
+          "Registered": true,
+          "Locked": false
+        },
+        {
+          "ResourceJsonFilePath": "\\Example_Env1\\Resources\\Example_Setup1\\Machine2.json",
+          "NickName": "",
+          "Registered": true,
+          "Locked": false
+        },
+        {
+          "ResourceJsonFilePath": "\\Example_Env1\\Resources\\Example_Setup2\\Machine3.json",
+          "NickName": "",
+          "Registered": true,
+          "Locked": true
+        }
+      ]
+    },
+    {
+      "Type": 0,
+      "Status": 1,
+      "Name": "Test2",
+      "ID": 0.0,
+      "MaxSeconds": 3600.0,
+      "Selected": false,
+      "Activated": false,
+      "ScriptPath": null,
+      "Resources": [
+        {
+          "ResourceJsonFilePath": "\\Example_Env1\\Resources\\Example_Setup2\\Machine3.json",
+          "NickName": "",
+          "Registered": true,
+          "Locked": true
+        }
+      ]
+    },
+    {
+      "Type": 0,
+      "Status": 1,
+      "Name": "New Test",
+      "ID": 0.0,
+      "MaxSeconds": 3600.0,
+      "Selected": false,
+      "Activated": false,
+      "ScriptPath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\Example_Project1\\Scripts\\Example1\\Example1TestScript1.ps1",
+      "Resources": []
+    }
+  ],
+  "Status": 1
+}

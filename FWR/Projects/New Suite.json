@@ -1,0 +1,20 @@
+{
+  "Name": "New Suite",
+  "ID": 0,
+  "SuiteFilePath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\New Suite.json",
+  "Environments": null,
+  "Tests": [
+    {
+      "Type": 0,
+      "Status": 1,
+      "Name": "New Test",
+      "ID": 0.0,
+      "MaxSeconds": 3600.0,
+      "Selected": false,
+      "Activated": false,
+      "ScriptPath": null,
+      "Resources": []
+    }
+  ],
+  "Status": 1
+}

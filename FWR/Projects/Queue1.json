@@ -1,0 +1,94 @@
+{
+  "Name": "West Fence",
+  "Cycles": [
+    {
+      "Name": "cycle1\r\n",
+      "Suites": [
+        {
+          "Name": "suite1",
+          "ID": 0,
+          "SuiteFilePath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\suite1.json",
+          "Environments": null,
+          "Tests": [
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "test1",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": true,
+              "Activated": false,
+              "ScriptPath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\Example_Project1\\Scripts\\Example1\\Example1TestScript1.ps1",
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            },
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "test2",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": true,
+              "Activated": false,
+              "ScriptPath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\Example_Project1\\Scripts\\Example1\\Example1TestScript1.ps1",
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            }
+          ],
+          "Status": 1,
+          "TotalSecondsRunning": 0,
+          "logFilePath": null
+        },
+        {
+          "Name": "suite2",
+          "ID": 0,
+          "SuiteFilePath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\suite1.json",
+          "Environments": null,
+          "Tests": [
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "test1",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": true,
+              "Activated": false,
+              "ScriptPath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\Example_Project1\\Scripts\\Example1\\Example1TestScript1.ps1",
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            },
+            {
+              "Type": 0,
+              "Status": 1,
+              "Result": 0,
+              "Name": "test2",
+              "ID": 0.0,
+              "MaxSeconds": 3600.0,
+              "Selected": false,
+              "Activated": false,
+              "ScriptPath": "C:\\FreeWinRunner\\FWR\\FWR\\Projects\\Example_Project1\\Scripts\\Example1\\Example1TestScript1.ps1",
+              "Resources": [],
+              "TotalSecondsRunning": 0,
+              "logFilePath": null
+            }
+          ],
+          "Status": 1,
+          "TotalSecondsRunning": 0,
+          "logFilePath": null
+        },
+      ],
+      "ID": 1,
+      "Active": true,
+      "Status": 1,
+      "CycleWorker": null,
+      "TotalSecondsRunning": 0,
+      "logFilePath": null
+    }
+  ]
+}
