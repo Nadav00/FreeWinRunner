@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FWR.UI_Aux;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -10,8 +11,8 @@ namespace FWR.Engine
     {
         private Thread MAINTHRD;
         private System.Windows.Threading.DispatcherPriority NRML = System.Windows.Threading.DispatcherPriority.Normal;
-        private Log log = new Log(Path.Combine(Path.GetTempPath(), "FWR", "MainEngine.txt"));
-
+        private Log log;
+        MainWindow FORM;
 
         private List<Const.Status> Startable = new List<Const.Status>()
         {
@@ -19,15 +20,23 @@ namespace FWR.Engine
             Const.Status.Stopped,
         };
 
+        private List<Const.Status> Stoppable = new List<Const.Status>()
+        {
+            Const.Status.Running,
+            Const.Status.Paused
+        };
+        
+
         public void StartRun()
         {
+            FORM = Runtime.GetMainWindow();
+            string logPath = StringHandlers.CleanName(FORM.NameTextBox.Text + "MainEngine.log");
+            log = new Log(Path.Combine(Path.GetTempPath(), "FWR", logPath));
+
             if (Runtime.queue?.Cycles?.Count > 0)
                 log.Info("Starting Main Engine");
             else
-            {
-                log.Info("Nothing to Start");
-                return;
-            }
+                {log.Info("Nothing to Start"); return;}
 
             if (Startable.Contains(Runtime.status))
             {
@@ -36,7 +45,27 @@ namespace FWR.Engine
                 MAINTHRD.Name = "QUEUE_MAIN_THRD";
                 MAINTHRD.Priority = ThreadPriority.AboveNormal;
                 MAINTHRD.Start();
-                Runtime.GetMainWindow().SetStatus(Const.Status.Running);
+            }
+        }
+
+        public void StopRun()
+        {
+            if (Stoppable.Contains(Runtime.status))
+            {
+                log.Info("Stopping Main Engine");
+                Runtime.status = Const.Status.Stopped;
+                MAINTHRD.Abort();
+                MAINTHRD = null;
+
+                foreach (Cycle cycle in Runtime.queue.Cycles)
+                {
+                    if (Stoppable.Contains(cycle.Status))
+                    {
+                        cycle.Status = Const.Status.Stopped;
+                        cycle.CycleWorker.Abort();
+                        cycle.CycleWorker = null;
+                    }
+                }
             }
         }
 
@@ -53,10 +82,10 @@ namespace FWR.Engine
                         int ID = cycle.ID;
                         string controlName = Const.cycleObject + ID;
 
-                        Runtime.GetMainWindow().Dispatcher.Invoke(NRML, new Action(delegate (){
-                            Runtime.GetMainWindow().AddToTodoList(controlName, "Background", new SolidColorBrush(Colors.CornflowerBlue)); }));
+                        FORM.Dispatcher.Invoke(NRML, new Action(delegate (){
+                            FORM.AddToTodoList(controlName, "Background", new SolidColorBrush(Colors.CornflowerBlue)); }));
 
-                        foreach (Suite suite in cycle.Suites)
+                        foreach (Suite suite in cycle.Suites ?? new List<Suite>())
                             if (Startable.Contains(suite.Status))
                                 suite.Status = Const.Status.Running;
 
@@ -76,7 +105,7 @@ namespace FWR.Engine
             {
                 cycle.TotalSecondsRunning++;
 
-                foreach (Suite suite in cycle.Suites)
+                foreach (Suite suite in cycle.Suites ?? new List<Suite>())
                 {
                     suite.TotalSecondsRunning++;
                 }

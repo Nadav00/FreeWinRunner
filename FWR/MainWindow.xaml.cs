@@ -23,11 +23,10 @@ namespace FWR
     {
         public ListView QueueObj;
         public int latestCycle = 0;
-        private Const.Status _status;
         private int totalSecondsRunning;
         private List<UiTodoListItem> uiTodoList = new List<UiTodoListItem>();
         private string logPath = Path.Combine(Path.GetTempPath(),"FWR");
-        private Log log = new Log(Path.Combine(Path.GetTempPath(), "FWR", "MainWindow.txt"));
+        private Log log = new Log(Path.Combine(Path.GetTempPath(), "FWR", "MainWindow.log"));
 
         public class UiTodoListItem
         {
@@ -49,17 +48,6 @@ namespace FWR
             log.Info("--------------------------");
         }
 
-        public void SetStatus(Const.Status status)
-        {
-            _status = status;
-            StatusLabel.Content = status.ToString();
-        }
-
-        public Const.Status GetStatus(Const.Status status)
-        {
-            return _status;
-        }
-
         private void InitializeObjects()
         {
             if (!Directory.Exists(logPath))
@@ -78,7 +66,7 @@ namespace FWR
 
         void UiUpdateRunner(object sender, EventArgs e)
         {
-            if (_status == Const.Status.Running)
+            if (Runtime.status == Const.Status.Running)
             {
                 totalSecondsRunning++;
                 TimeLabel.Content = StringHandlers.IntSecondsToHhMmSsString(totalSecondsRunning);
@@ -370,7 +358,7 @@ namespace FWR
 
         private void Click_Stop(object sender, RoutedEventArgs e)
         {
-
+            Runtime.engine.StopRun();
         }
 
         private void Delete_All(object sender, RoutedEventArgs e)
