@@ -22,7 +22,7 @@ namespace FWR.UI_Aux
 
         public static string ShortDateTimeString(DateTime dateTime)
         {
-            return dateTime.ToString(@"DD_MM-hh_mm");
+            return dateTime.ToString(@"dd_MM-hh_mm");
         }
     }
 }

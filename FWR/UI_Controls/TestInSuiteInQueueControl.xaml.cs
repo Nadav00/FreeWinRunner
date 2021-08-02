@@ -48,7 +48,7 @@ namespace FWR.UI_Controls
             else
             {
                 exeWindowGrid.Visibility = Visibility.Visible;
-                this.Height = 60;
+                this.Height = 400;
             }
         }
 

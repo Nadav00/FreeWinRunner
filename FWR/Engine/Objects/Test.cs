@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace FWR.Engine
 {
     public class Test
     {
+        public Process ShellProcess { get; set; }
+
         public Const.TestType Type { get; set; } = Const.TestType.Normal;
         public Const.Status Status { get; set; } = Const.Status.New;
         public Const.Result Result { get; set; } = Const.Result.New;

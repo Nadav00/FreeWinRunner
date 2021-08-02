@@ -139,14 +139,20 @@ namespace FWR.Engine
                 testLog.Info("starting test:" + taskName);
 
                 string exeName = "powershell.exe";
-                var procInfo = new System.Diagnostics.ProcessStartInfo(exeName);
+
+                var procInfo = new ProcessStartInfo()
+                {
+                    FileName = "powershell.exe",
+                    Arguments = $"-NoProfile -ExecutionPolicy unrestricted \"{test.ScriptPath}\"",
+                    //UseShellExecute = false
+                };
+
                 procInfo.WorkingDirectory = Path.GetDirectoryName(exeName);
                 procInfo.WindowStyle = ProcessWindowStyle.Normal;
                 Process _childp = Process.Start(procInfo);
-                _childp.Refresh();
+                test.ShellProcess = _childp;
 
                 string testUiObjectName = StringHandlers.CleanName(Const.TestInSuiteUiObj + test.ID);
-
                 FORM.Dispatcher.Invoke(NRML, new Action(delegate ()
                 {
                     TestInSuiteInQueueControl testInSuiteInQueueControl = ObjectsHandlers.FindChildObjectInObject<TestInSuiteInQueueControl>(Runtime.GetMainWindow()).First(x => x.Name == testUiObjectName);
