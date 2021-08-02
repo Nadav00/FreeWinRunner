@@ -1,7 +1,10 @@
 ﻿using FWR.UI_Aux;
+using FWR.UI_Controls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Media;
 
@@ -25,7 +28,7 @@ namespace FWR.Engine
             Const.Status.Running,
             Const.Status.Paused
         };
-        
+
 
         public void StartRun()
         {
@@ -36,7 +39,7 @@ namespace FWR.Engine
             if (Runtime.queue?.Cycles?.Count > 0)
                 log.Info("Starting Main Engine");
             else
-                {log.Info("Nothing to Start"); return;}
+            { log.Info("Nothing to Start"); return; }
 
             if (Startable.Contains(Runtime.status))
             {
@@ -71,7 +74,7 @@ namespace FWR.Engine
 
         private void MainEngineRun()
         {
-            while (Runtime.status == Const.Status.Running && Runtime.queue.Cycles != null) 
+            while (Runtime.status == Const.Status.Running && Runtime.queue.Cycles != null)
             {
                 foreach (Cycle cycle in Runtime.queue.Cycles)
                 {
@@ -82,8 +85,10 @@ namespace FWR.Engine
                         int ID = cycle.ID;
                         string controlName = Const.cycleObject + ID;
 
-                        FORM.Dispatcher.Invoke(NRML, new Action(delegate (){
-                            FORM.AddToTodoList(controlName, "Background", new SolidColorBrush(Colors.CornflowerBlue)); }));
+                        FORM.Dispatcher.Invoke(NRML, new Action(delegate ()
+                        {
+                            FORM.AddToTodoList(controlName, "Background", new SolidColorBrush(Colors.CornflowerBlue));
+                        }));
 
                         foreach (Suite suite in cycle.Suites ?? new List<Suite>())
                             if (Startable.Contains(suite.Status))
@@ -108,9 +113,45 @@ namespace FWR.Engine
                 foreach (Suite suite in cycle.Suites ?? new List<Suite>())
                 {
                     suite.TotalSecondsRunning++;
+                    if (suite.Status == Const.Status.Running)
+                    {
+                        if (suite.GetRunningTest() != null)
+                        {
+                            //      if (suite.GetRunningTest().OldOrDead()))
+                            //         Kill_Test(cycle, suite, test);
+                        }
+                        else
+                            Start_Test(cycle, suite, suite.FindNextTestToRun());
+                    }
                 }
-
                 Thread.Sleep(1000);
+            }
+        }
+
+        private void Start_Test(Cycle cycle, Suite suite, Test test)
+        {
+            if (test != null)
+            {
+                test.Status = Const.Status.Running;
+                string taskName = "CYCLE_" + cycle.ID + "_SUITE_" + StringHandlers.CleanName(suite.Name) + "_TEST_" + test.ID;
+                string logFileName = taskName + "-" + StringHandlers.ShortDateTimeString(DateTime.Now) + ".log";
+                Log testLog = new Log(Path.Combine(Path.GetTempPath(), "FWR", logFileName));
+                testLog.Info("starting test:" + taskName);
+
+                string exeName = "powershell.exe";
+                var procInfo = new System.Diagnostics.ProcessStartInfo(exeName);
+                procInfo.WorkingDirectory = Path.GetDirectoryName(exeName);
+                procInfo.WindowStyle = ProcessWindowStyle.Normal;
+                Process _childp = Process.Start(procInfo);
+                _childp.Refresh();
+
+                string testUiObjectName = StringHandlers.CleanName(Const.TestInSuiteUiObj + test.ID);
+
+                FORM.Dispatcher.Invoke(NRML, new Action(delegate ()
+                {
+                    TestInSuiteInQueueControl testInSuiteInQueueControl = ObjectsHandlers.FindChildObjectInObject<TestInSuiteInQueueControl>(Runtime.GetMainWindow()).First(x => x.Name == testUiObjectName);
+                    testInSuiteInQueueControl.exeWindowGrid.Children.Add(UI_Aux.ChildWindowHandler.SetProcessAsChildOfPanelControl(_childp, 800, 400));
+                }));
             }
         }
     }

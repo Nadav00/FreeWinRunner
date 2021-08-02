@@ -22,6 +22,8 @@ namespace FWR.UI_Controls
         public TestInSuiteInQueueControl(Suite suite, Test test)
         {
             _test = test;
+            _test.ID = new Random().Next(0, int.MaxValue);
+            Thread.Sleep(10);
             _suite = suite;
             InitializeComponent();
         }
@@ -62,7 +64,6 @@ namespace FWR.UI_Controls
             procInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(exeName);
             procInfo.WindowStyle = ProcessWindowStyle.Normal;
             Process _childp = Process.Start(procInfo);
-
             exeWindowGrid.Children.Add(UI_Aux.ChildWindowHandler.SetProcessAsChildOfPanelControl(_childp, 800, 400));
         }
 

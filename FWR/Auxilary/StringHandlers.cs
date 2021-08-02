@@ -19,5 +19,10 @@ namespace FWR.UI_Aux
             TimeSpan time = TimeSpan.FromSeconds(seconds);
             return time.ToString(@"hh\:mm\:ss");
         }
+
+        public static string ShortDateTimeString(DateTime dateTime)
+        {
+            return dateTime.ToString(@"DD_MM-hh_mm");
+        }
     }
 }

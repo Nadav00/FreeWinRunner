@@ -54,5 +54,6 @@ namespace FWR.Engine
 
         static public string projectSubfolder = "Projects";
         static public string EnvironmentSubfolder = "Environments";
+        static public string TestInSuiteUiObj = "TestInSuiteUiObj_ID_";
     }
 }

@@ -17,5 +17,25 @@ namespace FWR.Engine
         public int TotalSecondsRunning { get; set; }
         public string logFilePath { get; set; }
 
+        public Test GetRunningTest()
+        {
+            foreach (var test in Tests ?? new List<Test>())
+            {
+                if (test.Status == Const.Status.Running)
+                    return test;
+            }
+            return null;
+        }
+
+        public Test FindNextTestToRun()
+        {
+            foreach (var test in Tests ?? new List<Test>())
+            {
+                if (test.Status == Const.Status.New)
+                    return test;
+            }
+            return null;
+        }
+
     }
 }

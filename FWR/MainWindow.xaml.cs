@@ -334,7 +334,7 @@ namespace FWR
         private void AddTestToCycleSuiteUiObject(UI_Controls.SuiteInCycleControl suiteObject, Test test)
         {
             var newTestObject = new UI_Controls.TestInSuiteInQueueControl(suiteObject.GetSuite(), test);
-            newTestObject.Name = StringHandlers.CleanName(suiteObject.Name + test.Name);
+            newTestObject.Name = StringHandlers.CleanName(Const.TestInSuiteUiObj + test.ID);
             newTestObject.nameLabel.Content = test.Name;
             newTestObject.selectedCheckbox.IsChecked = test.Selected;
             newTestObject.exeWindowGrid.Visibility = Visibility.Collapsed;
