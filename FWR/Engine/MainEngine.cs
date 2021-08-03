@@ -1,10 +1,8 @@
 ﻿using FWR.UI_Aux;
-using FWR.UI_Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Media;
 
@@ -115,10 +113,16 @@ namespace FWR.Engine
                     suite.TotalSecondsRunning++;
                     if (suite.Status == Const.Status.Running)
                     {
-                        if (suite.GetRunningTest() != null)
+                        var runningTest = suite.GetRunningTest();
+                        if (runningTest != null)
                         {
-                            //      if (suite.GetRunningTest().OldOrDead()))
-                            //         Kill_Test(cycle, suite, test);
+                            var a = IsTestFinished(runningTest);
+                            //if (IsTestFinished(runningTest))
+                            //  End_Test(cycle, suite, test);
+
+                            //if (OldOrDead(runningTest))
+                            //  Kill_Test(cycle, suite, test);
+
                         }
                         else
                             Start_Test(cycle, suite, suite.FindNextTestToRun());
@@ -126,6 +130,11 @@ namespace FWR.Engine
                 }
                 Thread.Sleep(1000);
             }
+        }
+
+        private bool IsTestFinished(Test test)
+        {
+            return false;
         }
 
         private void Start_Test(Cycle cycle, Suite suite, Test test)
@@ -143,22 +152,36 @@ namespace FWR.Engine
                 var procInfo = new ProcessStartInfo()
                 {
                     FileName = "powershell.exe",
-                    Arguments = $"-NoProfile -ExecutionPolicy unrestricted \"{test.ScriptPath}\"",
+                    Arguments = $"-NoProfile -ExecutionPolicy unrestricted \"{test.ScriptPath}\"  | Tee-Object -file {testLog.GetLogFilePath()}",
                     //UseShellExecute = false
                 };
 
                 procInfo.WorkingDirectory = Path.GetDirectoryName(exeName);
                 procInfo.WindowStyle = ProcessWindowStyle.Normal;
                 Process _childp = Process.Start(procInfo);
+                _childp.EnableRaisingEvents = true;
+                _childp.Exited += (sender, e) => { End_Test(test); };
                 test.ShellProcess = _childp;
 
-                string testUiObjectName = StringHandlers.CleanName(Const.TestInSuiteUiObj + test.ID);
-                FORM.Dispatcher.Invoke(NRML, new Action(delegate ()
-                {
-                    TestInSuiteInQueueControl testInSuiteInQueueControl = ObjectsHandlers.FindChildObjectInObject<TestInSuiteInQueueControl>(Runtime.GetMainWindow()).First(x => x.Name == testUiObjectName);
-                    testInSuiteInQueueControl.exeWindowGrid.Children.Add(UI_Aux.ChildWindowHandler.SetProcessAsChildOfPanelControl(_childp, 800, 400));
+                FORM.Dispatcher.Invoke(NRML, new Action(delegate (){
+                     test.testInSuiteInQueueControl.exeWindowGrid.Children.Add(ChildWindowHandler.SetProcessAsChildOfPanelControl(_childp, 800, 400, test));
                 }));
             }
         }
+
+        private void End_Test(Test test)
+        {
+            test.ShellProcess.Exited -= (sender, e) => { End_Test(test); };
+            test.Status = Const.Status.Finished;
+            test.ShellProcess.Close();
+            test.ShellProcess = null;
+
+            FORM.Dispatcher.Invoke(NRML, new Action(delegate (){
+                test.testInSuiteInQueueControl.exeWindowGrid.Children.Remove(test.WindowsFormsHostControl);
+            }));
+
+            test.WindowsFormsHostControl = null;
+        }
     }
 }
+

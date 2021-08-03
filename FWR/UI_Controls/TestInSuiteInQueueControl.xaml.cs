@@ -48,7 +48,10 @@ namespace FWR.UI_Controls
             else
             {
                 exeWindowGrid.Visibility = Visibility.Visible;
-                this.Height = 400;
+                if (_test.ShellProcess != null)
+                    this.Height = 400;
+                else
+                    this.Height = 60;
             }
         }
 
@@ -59,12 +62,7 @@ namespace FWR.UI_Controls
 
         private void Click_Log(object sender, RoutedEventArgs e)
         {
-            string exeName = "powershell.exe";
-            var procInfo = new System.Diagnostics.ProcessStartInfo(exeName);
-            procInfo.WorkingDirectory = System.IO.Path.GetDirectoryName(exeName);
-            procInfo.WindowStyle = ProcessWindowStyle.Normal;
-            Process _childp = Process.Start(procInfo);
-            exeWindowGrid.Children.Add(UI_Aux.ChildWindowHandler.SetProcessAsChildOfPanelControl(_childp, 800, 400));
+
         }
 
         private void Checkbox_Clicked(object sender, RoutedEventArgs e)

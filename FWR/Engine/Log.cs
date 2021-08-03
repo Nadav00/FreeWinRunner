@@ -8,6 +8,11 @@ namespace FWR.Engine
 
         private string _logFilePath;
 
+        public string GetLogFilePath()
+        {
+            return _logFilePath;
+        }
+
         public Log(string logFilePath)
         {
             _logFilePath = logFilePath;

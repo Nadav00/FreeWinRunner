@@ -1,15 +1,15 @@
-﻿using System;
+﻿using FWR.UI_Controls;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms.Integration;
 
 namespace FWR.Engine
 {
     public class Test
     {
+        public WindowsFormsHost WindowsFormsHostControl { get; set; }
         public Process ShellProcess { get; set; }
+        public TestInSuiteInQueueControl testInSuiteInQueueControl { get; set; }
 
         public Const.TestType Type { get; set; } = Const.TestType.Normal;
         public Const.Status Status { get; set; } = Const.Status.New;

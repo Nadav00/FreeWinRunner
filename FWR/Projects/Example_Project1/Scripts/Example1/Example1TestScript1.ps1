@@ -1,6 +1,6 @@
 Write-Output 'Hello World'
 
-$loops = 1000;
+$loops = 10;
 
 For ($i=0; $i -le $loops; $i++) {
 		Write-Output "$i / $loops"

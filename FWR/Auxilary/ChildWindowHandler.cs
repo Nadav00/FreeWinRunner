@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FWR.Engine;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace FWR.UI_Aux
         [DllImport("user32.dll", SetLastError = true)]
         internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
 
-        public static WindowsFormsHost SetProcessAsChildOfPanelControl(Process processToBeChild, int width, int height)
+        public static WindowsFormsHost SetProcessAsChildOfPanelControl(Process processToBeChild, int width, int height, Test test)
         {
             while (processToBeChild.MainWindowHandle == IntPtr.Zero)
             {
@@ -62,6 +63,7 @@ namespace FWR.UI_Aux
             MakeExternalWindowBorderless(processToBeChild.MainWindowHandle);
             MoveWindow(_appWin, 0, 0, width, height, true);
 
+            test.WindowsFormsHostControl = windowsFormsHost;
             return windowsFormsHost;
         }
 
