@@ -1,12 +1,16 @@
 ﻿using SQLDatabase.Net.SQLDatabaseClient;
+<<<<<<< HEAD
 using System;
 using System.Data;
+=======
+>>>>>>> 32bc39bf5187e0d025759231a6953d4239efa84b
 
 namespace FWR.Database
 {
     public class Database
     {
         private string _filePath;
+<<<<<<< HEAD
         private SqlDatabaseConnection cnn;
 
         public Database(string filePath)
@@ -62,6 +66,15 @@ namespace FWR.Database
 
             return false;
         }
+=======
+
+        public Database(string filePath)
+        {
+            _filePath
+        }
+
+
+>>>>>>> 32bc39bf5187e0d025759231a6953d4239efa84b
 
 
     }
