@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\SQLDatabase.Net.2.7.0\build\SQLDatabase.Net.props" Condition="Exists('..\packages\SQLDatabase.Net.2.7.0\build\SQLDatabase.Net.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -14,6 +15,8 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,6 +40,9 @@
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLDatabase.Net, Version=2.7.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\SQLDatabase.Net.2.7.0\lib\netstandard2.0\x86\SQLDatabase.Net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -66,6 +72,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Auxilary\Namer.cs" />
+    <Compile Include="Database\Database.cs" />
+    <Compile Include="Database\DBViewer.xaml.cs">
+      <DependentUpon>DBViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\AddTest.xaml.cs">
       <DependentUpon>AddTest.xaml</DependentUpon>
     </Compile>
@@ -87,6 +97,10 @@
     <Compile Include="UI_Controls\TestInSuiteInQueueControl.xaml.cs">
       <DependentUpon>TestInSuiteInQueueControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="Database\DBViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Editors\AddTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -160,4 +174,10 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\SQLDatabase.Net.2.7.0\build\SQLDatabase.Net.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLDatabase.Net.2.7.0\build\SQLDatabase.Net.props'))" />
+  </Target>
 </Project>

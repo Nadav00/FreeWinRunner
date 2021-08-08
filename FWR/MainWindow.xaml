@@ -12,6 +12,7 @@
             <MenuItem x:Name="Load_Queue_Menu" Header="Load Queue" Height="31" Width="auto" Click="Load_Queue"/>
             <MenuItem x:Name="Save_Queue_Menu" Header="Save Queue" Height="31" Width="auto" Click="Save_Queue"/>
             <MenuItem x:Name="Delete_Queue_Menu" Header="Delete all" Height="31" Width="auto" Click="Delete_All"/>
+            <MenuItem x:Name="DB_Viewer" Header="View DB" Height="31" Width="auto" Click="View_DB"/>
             <MenuItem x:Name="Config" Header="Configuration" Height="31" Width="auto" Click="Edit_Config"/>
         </Menu>
         <WrapPanel Width="822">

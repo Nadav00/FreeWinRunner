@@ -1,4 +1,5 @@
 ﻿using FWR.Auxilary;
+using FWR.Database;
 using FWR.Engine;
 using FWR.UI_Aux;
 using FWR.UI_Controls;
@@ -27,6 +28,7 @@ namespace FWR
         private List<UiTodoListItem> uiTodoList = new List<UiTodoListItem>();
         private string logPath = Path.Combine(Path.GetTempPath(),"FWR");
         private Log log = new Log(Path.Combine(Path.GetTempPath(), "FWR", "MainWindow.log"));
+
 
         public class UiTodoListItem
         {
@@ -127,7 +129,9 @@ namespace FWR
             string _cycleJsonFilePath = FileSystemPickers.FilePicker(System.IO.Path.Combine(StringHandlers.Unescape(Runtime.config.MAIN_DIR), Const.projectSubfolder), "json");
             Runtime.queue.Name = NameTextBox.Text;
             string json = JsonConvert.SerializeObject(Runtime.queue, Newtonsoft.Json.Formatting.Indented);
-            System.IO.File.WriteAllText(_cycleJsonFilePath, json);
+
+            if (_cycleJsonFilePath?.Length > 0)
+                System.IO.File.WriteAllText(_cycleJsonFilePath, json);
         }
 
         private void Load_Queue(object sender, RoutedEventArgs e)
@@ -151,7 +155,7 @@ namespace FWR
             }
         }
 
-        private void Add_Cycle_Perform(Engine.Cycle cycle, object sender, RoutedEventArgs e)
+        private void Add_Cycle_Perform(Cycle cycle, object sender, RoutedEventArgs e)
         {
             latestCycle++;
 
@@ -369,6 +373,12 @@ namespace FWR
             Runtime.queue = new Queue();
             Runtime.queue.Cycles = new List<Cycle>();
 
+        }
+
+        private void View_DB(object sender, RoutedEventArgs e)
+        {
+            DBViewer myDb = new DBViewer();
+            myDb.Show();
         }
 
 

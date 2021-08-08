@@ -8,6 +8,7 @@ using System.Threading;
 using System;
 using System.Windows.Forms.Integration;
 using FWR.Engine;
+using FWR.UI_Aux;
 
 namespace FWR.UI_Controls
 {
@@ -44,12 +45,18 @@ namespace FWR.UI_Controls
             {
                 exeWindowGrid.Visibility = Visibility.Collapsed;
                 this.Height = 30;
+                if (_test.ShellProcess != null)
+                    ChildWindowHandler.MakeExternalWindowHiddenOrNot(_test.ShellProcess, true);
+
             }
             else
             {
                 exeWindowGrid.Visibility = Visibility.Visible;
                 if (_test.ShellProcess != null)
-                    this.Height = 400;
+                {
+                    this.Height = 430;
+                    ChildWindowHandler.MakeExternalWindowHiddenOrNot(_test.ShellProcess, false);
+                }
                 else
                     this.Height = 60;
             }
