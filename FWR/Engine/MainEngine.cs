@@ -2,9 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows;
+using System.Windows.Forms.Integration;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace FWR.Engine
 {
@@ -113,13 +119,11 @@ namespace FWR.Engine
                     suite.TotalSecondsRunning++;
                     if (suite.Status == Const.Status.Running)
                     {
+
                         var runningTest = suite.GetRunningTest();
+
                         if (runningTest != null)
                         {
-                            var a = IsTestFinished(runningTest);
-                            //if (IsTestFinished(runningTest))
-                            //  End_Test(cycle, suite, test);
-
                             //if (OldOrDead(runningTest))
                             //  Kill_Test(cycle, suite, test);
 
@@ -130,11 +134,6 @@ namespace FWR.Engine
                 }
                 Thread.Sleep(1000);
             }
-        }
-
-        private bool IsTestFinished(Test test)
-        {
-            return false;
         }
 
         private void Start_Test(Cycle cycle, Suite suite, Test test)
@@ -153,7 +152,6 @@ namespace FWR.Engine
                 {
                     FileName = "powershell.exe",
                     Arguments = $"-NoProfile -ExecutionPolicy unrestricted \"{test.ScriptPath}\"  | Tee-Object -file {testLog.GetLogFilePath()}",
-                    //UseShellExecute = false
                 };
 
                 procInfo.WorkingDirectory = Path.GetDirectoryName(exeName);
@@ -166,6 +164,7 @@ namespace FWR.Engine
                 FORM.Dispatcher.Invoke(NRML, new Action(delegate (){
                      test.testInSuiteInQueueControl.exeWindowGrid.Children.Add(ChildWindowHandler.SetProcessAsChildOfPanelControl(_childp, 800, 400, test));
                 }));
+
             }
         }
 
@@ -178,10 +177,13 @@ namespace FWR.Engine
 
             FORM.Dispatcher.Invoke(NRML, new Action(delegate (){
                 test.testInSuiteInQueueControl.exeWindowGrid.Children.Remove(test.WindowsFormsHostControl);
+                test.testInSuiteInQueueControl.expander.IsExpanded = false;
+                test.testInSuiteInQueueControl.Height = 30;
             }));
 
             test.WindowsFormsHostControl = null;
         }
     }
 }
+
 

@@ -40,7 +40,7 @@ namespace FWR.Auxilary
                 {
                     if (x == (words - 1))
                         index = 1;
-                    Thread.Sleep(20);
+                    Thread.Sleep(10);
                     returnString += ListsArray[index][new Random().Next(0, ListsArray[index].Count - 1)] + " ";
                 }
             }
