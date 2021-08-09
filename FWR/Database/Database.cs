@@ -1,16 +1,12 @@
 ﻿using SQLDatabase.Net.SQLDatabaseClient;
-<<<<<<< HEAD
 using System;
 using System.Data;
-=======
->>>>>>> 32bc39bf5187e0d025759231a6953d4239efa84b
 
 namespace FWR.Database
 {
     public class Database
     {
         private string _filePath;
-<<<<<<< HEAD
         private SqlDatabaseConnection cnn;
 
         public Database(string filePath)
@@ -25,10 +21,9 @@ namespace FWR.Database
                 if (cnn.State == ConnectionState.Open)
                 {
                     using (SqlDatabaseCommand cmd = new SqlDatabaseCommand())
-
                     {
                         cmd.Connection = cnn;
-                        cmd.CommandText = "CREATE TABLE TestResults (ID BIGINT IDENTITY(1,1) , Name varchar(255));"; 
+                        cmd.CommandText = CreateTableString("TestResults", new Tables.TestResults()); 
                         cmd.ExecuteReader();
                     }
                 }
@@ -39,43 +34,36 @@ namespace FWR.Database
         {
             try
             {
-                using (SqlDatabaseConnection cnn = new SqlDatabaseConnection())
+                cnn.ConnectionString = $"SchemaName=db;uri=file://{_filePath}";
+                cnn.Open();
+
+                if (cnn.State == ConnectionState.Open)
                 {
-                    cnn.ConnectionString = $"SchemaName=db;uri=file://{_filePath}";
-                    cnn.Open();
+                    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand())
 
-                    if (cnn.State == ConnectionState.Open)
                     {
-                        using (SqlDatabaseCommand cmd = new SqlDatabaseCommand())
-
-                        {
-                            cmd.Connection = cnn;
-
-                            cmd.CommandText = "Select * From TestResults";
-
-                            //cmd.CommandText = "SELECT * FROM Table";
-                            cmd.ExecuteReader();
-                        }
+                        cmd.Connection = cnn;
+                        cmd.CommandText = "Select * From TestResults";
+                        cmd.ExecuteReader();
+                        return true;
                     }
                 }
             }
-            catch
-            {
-                return false;
-            }
+            catch { return false; }
 
             return false;
         }
-=======
 
-        public Database(string filePath)
+        public string CreateTableString(string tableName, Tables.Table table)
         {
-            _filePath
+            string strng = "CREATE TABLE " + tableName + " (";
+
+            foreach (var column in table.Columns)
+                strng += column.Key + " " + column.Value + ",";
+
+            strng = strng.Substring(0, strng.Length - 1) + ")";
+
+            return strng;
         }
-
-
->>>>>>> 32bc39bf5187e0d025759231a6953d4239efa84b
-
-
     }
 }

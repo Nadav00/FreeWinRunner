@@ -76,6 +76,7 @@
     <Compile Include="Database\DBViewer.xaml.cs">
       <DependentUpon>DBViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Database\Tables\Tables.cs" />
     <Compile Include="Editors\AddTest.xaml.cs">
       <DependentUpon>AddTest.xaml</DependentUpon>
     </Compile>

@@ -37,6 +37,7 @@ namespace FWR.Engine
             Error,
             Inconclusive,
             Skipped,
+            Timeout,
             Terminated
         }
 

@@ -7,12 +7,7 @@
         mc:Ignorable="d"
         Title="DBViewer" Height="450" Width="800">
     <Grid>
-<<<<<<< HEAD
-        <Button Content="Button" HorizontalAlignment="Left" Margin="68,55,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button x:Name="Button1" Content="Button" HorizontalAlignment="Left" Margin="68,55,0,0" VerticalAlignment="Top" Width="75"/>
         <TextBox HorizontalAlignment="Left" Height="223" Margin="68,123,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="639"/>
-
-=======
-        
->>>>>>> 32bc39bf5187e0d025759231a6953d4239efa84b
     </Grid>
 </Window>
