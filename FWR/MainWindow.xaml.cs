@@ -48,6 +48,7 @@ namespace FWR
             Add_Timer();
             log.Info("Added timer");
             log.Info("--------------------------");
+
         }
 
         private void InitializeObjects()
