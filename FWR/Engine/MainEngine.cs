@@ -1,25 +1,32 @@
 ﻿using FWR.UI_Aux;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.InteropServices;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
-using System.Windows;
-using System.Windows.Forms.Integration;
+using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
+
 
 namespace FWR.Engine
 {
     public class MainEngine
     {
         private Thread MAINTHRD;
-        private System.Windows.Threading.DispatcherPriority NRML = System.Windows.Threading.DispatcherPriority.Normal;
         private Log log;
         MainWindow FORM;
+
+        private System.Windows.Threading.DispatcherPriority IDLE = System.Windows.Threading.DispatcherPriority.ApplicationIdle;
+        private System.Windows.Threading.DispatcherPriority HIGH = System.Windows.Threading.DispatcherPriority.Send;
+
+
+        SolidColorBrush RED = new SolidColorBrush(Colors.Red);
+        SolidColorBrush GREEN = new SolidColorBrush(Colors.Green);
+        SolidColorBrush LBLUE = new SolidColorBrush(Colors.CornflowerBlue);
+        SolidColorBrush ORANGE = new SolidColorBrush(Colors.Orange);
 
         private List<Const.Status> Startable = new List<Const.Status>()
         {
@@ -31,6 +38,13 @@ namespace FWR.Engine
         {
             Const.Status.Running,
             Const.Status.Paused
+        };
+
+        private List<Const.Status> Ended = new List<Const.Status>()
+        {
+            Const.Status.Stopped,
+            Const.Status.Terminated,
+            Const.Status.Finished
         };
 
 
@@ -80,8 +94,13 @@ namespace FWR.Engine
         {
             while (Runtime.status == Const.Status.Running && Runtime.queue.Cycles != null)
             {
+                bool markedFinished = true;
+
                 foreach (Cycle cycle in Runtime.queue.Cycles)
                 {
+                    if (!Ended.Contains(cycle.Status))
+                        markedFinished = false;
+
                     if (cycle.Active && Startable.Contains(cycle.Status))
                     {
                         cycle.Status = Const.Status.Running;
@@ -89,22 +108,26 @@ namespace FWR.Engine
                         int ID = cycle.ID;
                         string controlName = Const.cycleObject + ID;
 
-                        FORM.Dispatcher.Invoke(NRML, new Action(delegate ()
-                        {
-                            FORM.AddToTodoList(controlName, "Background", new SolidColorBrush(Colors.CornflowerBlue));
-                        }));
+                        FORM.Dispatcher.Invoke(IDLE, new Action(delegate () { StyleControl(controlName, "Background", LBLUE); }));
 
                         foreach (Suite suite in cycle.Suites ?? new List<Suite>())
                             if (Startable.Contains(suite.Status))
+                            {
                                 suite.Status = Const.Status.Running;
+                                FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(suite.suiteInCycleControl.Name, "Background", LBLUE); }));
+                            }
+                        
 
                         cycle.CycleWorker = new Thread(() => CycleWorkerThread(cycle));
                         cycle.CycleWorker.Name = cycle.Name + "_RunThread";
                         cycle.CycleWorker.Start();
                     }
-
-                    Thread.Sleep(1000);
                 }
+
+                if (markedFinished)
+                    Runtime.status = Const.Status.Finished;
+
+                Thread.Sleep(1000);
             }
         }
 
@@ -131,7 +154,39 @@ namespace FWR.Engine
                         else
                             Start_Test(cycle, suite, suite.FindNextTestToRun());
                     }
+
+                    if (suite.TestsToRun() == 0)
+                    {
+                        suite.Status = Const.Status.Finished;
+
+                        if (suite.TotalPassTests() == suite.Tests.Count)
+                        {
+                            suite.Result = Const.Result.Pass;
+                            FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(suite.suiteInCycleControl.Name, "Background", GREEN); }));
+                        }
+                        else
+                        {
+                            suite.Result = Const.Result.NotPass;
+                            FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(suite.suiteInCycleControl.Name, "Background", ORANGE); }));
+                        }
+                    }
                 }
+
+                if (cycle.AllSuitesFinished())
+                {
+                    cycle.Status = Const.Status.Finished;
+                    if (cycle.AllSuitesPass())
+                    {
+                        cycle.Result = Const.Result.Pass;
+                        FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(cycle.CycleUiObject.Name, "Background", GREEN); }));
+                    }
+                    else
+                    {
+                        cycle.Result = Const.Result.NotPass;
+                        FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(cycle.CycleUiObject.Name, "Background", ORANGE); }));
+                    }
+                }
+
                 Thread.Sleep(1000);
             }
         }
@@ -140,10 +195,12 @@ namespace FWR.Engine
         {
             if (test != null)
             {
+                FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(test.testInSuiteInQueueControl.Name, "Background", LBLUE); }));
+
                 test.Status = Const.Status.Running;
                 string taskName = "CYCLE_" + cycle.ID + "_SUITE_" + StringHandlers.CleanName(suite.Name) + "_TEST_" + test.ID;
-                string logFileName = taskName + "-" + StringHandlers.ShortDateTimeString(DateTime.Now) + ".log";
-                Log testLog = new Log(Path.Combine(Path.GetTempPath(), "FWR", logFileName));
+                test.logFilePath = Path.Combine(Path.GetTempPath(), "FWR", taskName + "-" + StringHandlers.ShortDateTimeString(DateTime.Now) + ".log");
+                Log testLog = new Log(test.logFilePath);
                 testLog.Info("starting test:" + taskName);
 
                 string exeName = "powershell.exe";
@@ -151,37 +208,82 @@ namespace FWR.Engine
                 var procInfo = new ProcessStartInfo()
                 {
                     FileName = "powershell.exe",
-                    Arguments = $"-NoProfile -ExecutionPolicy unrestricted \"{test.ScriptPath}\"  | Tee-Object -file {testLog.GetLogFilePath()}",
+                    Arguments = $"-NoProfile -ExecutionPolicy unrestricted \"{test.ScriptPath}\" 2> {test.logFilePath + ".err"} -wait | Tee-Object -file {testLog.GetLogFilePath()}",
                 };
 
                 procInfo.WorkingDirectory = Path.GetDirectoryName(exeName);
                 procInfo.WindowStyle = ProcessWindowStyle.Normal;
+
                 Process _childp = Process.Start(procInfo);
                 _childp.EnableRaisingEvents = true;
                 _childp.Exited += (sender, e) => { End_Test(test); };
                 test.ShellProcess = _childp;
 
-                FORM.Dispatcher.Invoke(NRML, new Action(delegate (){
-                     test.testInSuiteInQueueControl.exeWindowGrid.Children.Add(ChildWindowHandler.SetProcessAsChildOfPanelControl(_childp, 800, 400, test));
+                FORM.Dispatcher.Invoke(IDLE, new Action(delegate ()
+                {
+                    test.testInSuiteInQueueControl.exeWindowGrid.Children.Add(ChildWindowHandler.SetProcessAsChildOfPanelControl(_childp, 800, 400, test));
                 }));
-
             }
         }
 
         private void End_Test(Test test)
         {
+            if (test.ShellProcess.ExitCode == 0)
+            {
+                FORM.Dispatcher.Invoke(IDLE, new Action(delegate () { StyleControl(test.testInSuiteInQueueControl.Name, "Background", GREEN); }));
+
+                test.Result = Const.Result.Pass;
+
+                FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(test.testInSuiteInQueueControl.Name, "Background", GREEN); }));
+            }
+            else
+            {
+                test.Result = Const.Result.Fail;
+
+                FORM.Dispatcher.Invoke(IDLE, new Action(delegate () { StyleControl(test.testInSuiteInQueueControl.Name, "Background", RED); }));
+
+                using (var reader = new StreamReader(test.logFilePath + ".err"))
+                {
+                    string error1 = reader.ReadLine();
+                    try
+                    {
+                        test.Error = reader.ReadLine().Split(':')[1];
+                    }
+                    catch
+                    {
+                        test.Error = error1;
+                    }
+                }
+
+                FORM.Dispatcher.Invoke(HIGH, new Action(delegate (){StyleControl(test.testInSuiteInQueueControl.Name, "Background", RED);}));
+            }
+
             test.ShellProcess.Exited -= (sender, e) => { End_Test(test); };
             test.Status = Const.Status.Finished;
             test.ShellProcess.Close();
             test.ShellProcess = null;
 
-            FORM.Dispatcher.Invoke(NRML, new Action(delegate (){
+            FORM.Dispatcher.Invoke(IDLE, new Action(delegate ()
+            {
                 test.testInSuiteInQueueControl.exeWindowGrid.Children.Remove(test.WindowsFormsHostControl);
                 test.testInSuiteInQueueControl.expander.IsExpanded = false;
                 test.testInSuiteInQueueControl.Height = 30;
             }));
 
             test.WindowsFormsHostControl = null;
+        }
+
+        private void StyleControl(string controlName, string controlPropertyName, Object controlPropertyToSet)
+        {
+            FORM.InvalidateVisual();
+
+            FORM.Dispatcher.Invoke(IDLE, new Action(() =>
+            {
+                var obj = ObjectsHandlers.FindChildObjectInObject<Control>(FORM).First(x => x.Name == controlName);
+                PropertyInfo pInfo = obj.GetType().GetProperty(controlPropertyName);
+                TypeConverter tc = TypeDescriptor.GetConverter(pInfo.PropertyType);
+                pInfo.SetValue(obj, controlPropertyToSet);
+            }));
         }
     }
 }

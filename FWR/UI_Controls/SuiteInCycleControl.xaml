@@ -9,8 +9,8 @@
     <Grid>
         <WrapPanel HorizontalAlignment="Left"  VerticalAlignment="Top" Width="790" Height="25" Grid.ColumnSpan="2">
             <Expander x:Name="expander" Width="25" Height="23" PreviewMouseLeftButtonDown="Expander_PreviewMouseLeftButtonDown"/>
-            <Label x:Name="nameCaptionLabel" Content="Suite:"/>
-            <Label x:Name="nameLabel" Content="" Width="140" />
+            <Label x:Name="nameCaptionLabel" Content="Suite:" FontWeight="Bold"/>
+            <Label x:Name="nameLabel" Content="" Width="140" FontWeight="Bold"/>
             <Label x:Name="statusCaptionLabel" Content="Status:"/>
             <Label x:Name="statusLabel" Content="" Width="60" />
             <Label x:Name="timeCaptionLabel" Content="Tot.run:"/>

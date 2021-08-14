@@ -33,6 +33,7 @@ namespace FWR.Engine
             New,
             Pass,
             PassWithIssues,
+            NotPass,
             Fail,
             Error,
             Inconclusive,

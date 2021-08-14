@@ -60,7 +60,7 @@ namespace FWR.UI_Aux
 
         public static WindowsFormsHost SetProcessAsChildOfPanelControl(Process processToBeChild, int width, int height, Test test)
         {
-            while (processToBeChild.MainWindowHandle == IntPtr.Zero)
+            while (processToBeChild?.MainWindowHandle == IntPtr.Zero)
             {
                 Thread.Yield();
             }
