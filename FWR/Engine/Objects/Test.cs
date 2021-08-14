@@ -18,6 +18,7 @@ namespace FWR.Engine
         public string Name { get; set; }
         public double ID { get; set; }
         public double MaxSeconds { get; set; } = 3600;
+        public string Error { get; set; }
 
         public bool Selected { get; set; }
         public bool Activated { get; set; }

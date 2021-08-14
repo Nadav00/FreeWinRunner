@@ -169,7 +169,6 @@
   <ItemGroup>
     <Folder Include="Auxilary\Resources\" />
     <Folder Include="Environments\Example_Env1\" />
-    <Folder Include="Powershell\" />
     <Folder Include="Projects\Example_Project1\Scripts\" />
     <Folder Include="Projects\Example_Project1\Suites\" />
     <Folder Include="Projects\Example_Project1\Tests\Sanity\" />

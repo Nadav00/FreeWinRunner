@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -26,9 +27,9 @@ namespace FWR
         public int latestCycle = 0;
         private int totalSecondsRunning;
         private List<UiTodoListItem> uiTodoList = new List<UiTodoListItem>();
-        private string logPath = Path.Combine(Path.GetTempPath(),"FWR");
+        private string logPath = Path.Combine(Path.GetTempPath(), "FWR");
         private Log log = new Log(Path.Combine(Path.GetTempPath(), "FWR", "MainWindow.log"));
-
+        private readonly Object formLock = new Object();
 
         public class UiTodoListItem
         {
@@ -79,33 +80,12 @@ namespace FWR
                     Label timeCaptionLabelObj = ObjectsHandlers.FindChildObjectInObject<Label>(this).First(x => x.Name == Const.cycleTimeCaptionLabel + ID);
                     timeCaptionLabelObj.Content = StringHandlers.IntSecondsToHhMmSsString(cycle.TotalSecondsRunning);
                 }
-
-                ProcessUiTodoList();
-
-
-
             }
         }
 
-        private void ProcessUiTodoList()
+        public void AddToTodoList(string controlName, string propertyName, object valuePropertyToSet)
         {
-            var listCopy = uiTodoList.ConvertAll(x => x).ToList();
-            uiTodoList = new List<UiTodoListItem>();
-
-            foreach (var item in listCopy)
-            {
-                var obj = ObjectsHandlers.FindChildObjectInObject<Control>(this).First(x => x.Name == item.ControlName);
-
-                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
-                {
-                    PropertyInfo pInfo = obj.GetType().GetProperty(item.ControlPropertyName);
-                    TypeConverter tc = TypeDescriptor.GetConverter(pInfo.PropertyType);
-                    pInfo.SetValue(obj, item.ControlPropertyToSet);
-                }));
-
-            }
-
-            listCopy = null;
+            uiTodoList.Add(new UiTodoListItem() { ControlName = controlName, ControlPropertyName = propertyName, ControlPropertyToSet = valuePropertyToSet });
         }
 
         static Object GetProperty(object control, string propertyName)
@@ -130,18 +110,18 @@ namespace FWR
 
         private void Save_Queue(object sender, RoutedEventArgs e)
         {
-            string _cycleJsonFilePath = FileSystemPickers.FilePicker(System.IO.Path.Combine(StringHandlers.Unescape(Runtime.config.MAIN_DIR), Const.projectSubfolder), "json");
+            string _cycleJsonFilePath = FileSystemPickers.FilePicker(Path.Combine(StringHandlers.Unescape(Runtime.config.MAIN_DIR), Const.projectSubfolder), "json");
             Runtime.queue.Name = NameTextBox.Text;
-            string json = JsonConvert.SerializeObject(Runtime.queue, Newtonsoft.Json.Formatting.Indented);
+            string json = JsonConvert.SerializeObject(Runtime.queue, Formatting.Indented);
 
             if (_cycleJsonFilePath?.Length > 0)
-                System.IO.File.WriteAllText(_cycleJsonFilePath, json);
+                File.WriteAllText(_cycleJsonFilePath, json);
         }
 
         private void Load_Queue(object sender, RoutedEventArgs e)
         {
-            string _cycleJsonFilePath = FileSystemPickers.FilePicker(System.IO.Path.Combine(StringHandlers.Unescape(Runtime.config.MAIN_DIR), Const.projectSubfolder), "json");
-            Queue queue = JsonConvert.DeserializeObject<Queue>(System.IO.File.ReadAllText(_cycleJsonFilePath));
+            string _cycleJsonFilePath = FileSystemPickers.FilePicker(Path.Combine(StringHandlers.Unescape(Runtime.config.MAIN_DIR), Const.projectSubfolder), "json");
+            Queue queue = JsonConvert.DeserializeObject<Queue>(File.ReadAllText(_cycleJsonFilePath));
             NameTextBox.Text = queue.Name;
             foreach (Cycle cycle in queue.Cycles)
             {
@@ -283,11 +263,11 @@ namespace FWR
             var ID = int.Parse(name.Replace(Const.addSuiteButton, string.Empty));
             Cycle cycle = Runtime.queue.Cycles.Find(c => c.ID == ID);
 
-            string _suiteJsonFilePath = FileSystemPickers.FilePicker(System.IO.Path.Combine(StringHandlers.Unescape(Runtime.config.MAIN_DIR), Const.projectSubfolder), "json");
+            string _suiteJsonFilePath = FileSystemPickers.FilePicker(Path.Combine(StringHandlers.Unescape(Runtime.config.MAIN_DIR), Const.projectSubfolder), "json");
 
             if (_suiteJsonFilePath?.Length > 1)
             {
-                Suite suite = JsonConvert.DeserializeObject<Suite>(System.IO.File.ReadAllText(_suiteJsonFilePath));
+                Suite suite = JsonConvert.DeserializeObject<Suite>(File.ReadAllText(_suiteJsonFilePath));
 
                 if (suite.Status == Const.Status.New)
                 {
@@ -322,9 +302,11 @@ namespace FWR
             string cycleBodyName = Const.cycleBody + cycle.ID;
             StackPanel cycleBodyObj = ObjectsHandlers.FindChildObjectInObject<StackPanel>(this).First(x => x.Name == Const.cycleBody + cycle.ID);
 
-            var newSuiteObject = new UI_Controls.SuiteInCycleControl(suite, cycle);
+            var newSuiteObject = new SuiteInCycleControl(suite, cycle);
             newSuiteObject.Name = StringHandlers.CleanName(Const.cycleBodySuite + cycle.Name + suite.Name);
             newSuiteObject.nameLabel.Content = suite.Name;
+            suite.suiteInCycleControl = newSuiteObject;
+
             cycleBodyObj.Children.Add(newSuiteObject);
 
             foreach (Test test in suite.Tests)
@@ -335,11 +317,11 @@ namespace FWR
 
         public void UpdateSuiteUI(Suite suite, Cycle cycle)
         {
-            string controlName = UI_Aux.StringHandlers.CleanName(Const.cycleBodySuite + cycle.Name + suite.Name);
+            string controlName = StringHandlers.CleanName(Const.cycleBodySuite + cycle.Name + suite.Name);
             SuiteInCycleControl cycleBodyObj = ObjectsHandlers.FindChildObjectInObject<SuiteInCycleControl>(this).First(x => x.Name == controlName);
         }
 
-        private void AddTestToCycleSuiteUiObject(UI_Controls.SuiteInCycleControl suiteObject, Test test)
+        private void AddTestToCycleSuiteUiObject(SuiteInCycleControl suiteObject, Test test)
         {
             var newTestObject = new TestInSuiteInQueueControl(suiteObject.GetSuite(), test);
             newTestObject.Name = StringHandlers.CleanName(Const.TestInSuiteUiObj + test.ID);
@@ -385,10 +367,19 @@ namespace FWR
             myDb.Show();
         }
 
-
-        public void AddToTodoList(string controlName, string propertyName, object valuePropertyToSet)
+        public void StyleControl(string controlName, string propertyName, Object controlPropertyToSet)
         {
-            uiTodoList.Add(new UiTodoListItem(){ControlName = controlName, ControlPropertyName = propertyName, ControlPropertyToSet = valuePropertyToSet});
+            var obj = ObjectsHandlers.FindChildObjectInObject<Control>(this).First(x => x.Name == controlName);
+
+            lock (formLock)
+            {
+                this.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                {
+                    PropertyInfo pInfo = obj.GetType().GetProperty(propertyName);
+                    TypeConverter tc = TypeDescriptor.GetConverter(pInfo.PropertyType);
+                    pInfo.SetValue(obj, controlPropertyToSet);
+                }));
+            }
         }
     }
 }

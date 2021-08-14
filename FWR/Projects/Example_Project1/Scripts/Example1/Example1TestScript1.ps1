@@ -1,6 +1,10 @@
 Write-Output 'Hello World'
 
-$loops = 10;
+
+#Write-Error "TERRIBLE_ERROR"
+#throw "TERRIBLE_ERROR"
+
+$loops = Get-Random -Maximum 5
 
 For ($i=0; $i -le $loops; $i++) {
 		Write-Output "$i / $loops"
