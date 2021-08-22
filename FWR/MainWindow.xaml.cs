@@ -44,7 +44,7 @@ namespace FWR
         public MainWindow()
         {
             InitializeComponent();
-            FWR.UI_Aux.Config.Load_Config();
+            UI_Aux.Config.Load_Config();
             InitializeObjects();
             log.Info("Started Main Window");
             NameTextBox.Text = Namer.MakeName(2);
@@ -88,12 +88,43 @@ namespace FWR
                     timeCaptionLabelObj.Content = StringHandlers.IntSecondsToHhMmSsString(cycle.TotalSecondsRunning);
 
                     foreach (Suite suite in cycle.Suites)
-                        suite.suiteInCycleControl.statusLabel.Content = suite.Status.ToString();
+                    {
+                        if (suite.needUiUpdate)
+                            suite.suiteInCycleControl.statusLabel.Content = suite.Status.ToString();
+
+                        foreach (Test test in suite.Tests)
+                            if (test.needUiUpdate)
+                                UpdateTestUi(test);
+                    }
                 }
 
                 if (Runtime.status != Const.Status.Running)
                     needLastUiUpdate = false;
             }
+        }
+
+        public void UpdateTestUi(Test test)
+        {
+            Color color = new Color();
+
+            switch (test.Status)
+            {
+                case Const.Status.Running:
+                    color = Colors.CornflowerBlue;
+                    break;
+                case Const.Status.Finished:
+                    if (test.Result == Const.Result.Pass)
+                        color = Colors.Green;
+                    else
+                        color = Colors.Red;
+                    break;
+                default:
+                    break;
+            }
+
+            SolidColorBrush brush = new SolidColorBrush(color);
+
+            StyleControl(test.testInSuiteInQueueControl.Name, "Background", brush);
         }
 
         public void AddToTodoList(string controlName, string propertyName, object valuePropertyToSet)
@@ -177,7 +208,7 @@ namespace FWR
             // === Cycle UI control ==================================
             ListView cycleObject = new ListView();
             cycle.CycleUiObject = cycleObject;
-            cycleObject.Name = Const.cycleObject + latestCycle;
+            cycleObject.Name = Const.cycleUiObject + latestCycle;
             var zeroThickns = new Thickness(0, 0, 0, 0);
             cycleObject.BorderThickness = zeroThickns;
             // --- Header  -------------------------------------------
@@ -292,9 +323,10 @@ namespace FWR
             if (_suiteJsonFilePath?.Length > 1)
             {
                 Suite suite = JsonConvert.DeserializeObject<Suite>(File.ReadAllText(_suiteJsonFilePath));
-
+                
                 if (suite.Status == Const.Status.New)
                 {
+                    suite.cycle = cycle;
                     cycle.Suites = cycle.Suites ?? new List<Suite>();
                     cycle.Suites.Add(suite);
                     AddSuiteToCycleUiObject(cycle, suite);
@@ -309,10 +341,11 @@ namespace FWR
             var ID = int.Parse(name.Replace(Const.newSuiteButton, string.Empty));
             Cycle cycle = Runtime.queue.Cycles.Find(c => c.ID == ID);
             Suite suite = new Suite();
-            FWR.Editors.SuiteEdit newSuiteWindow = new Editors.SuiteEdit(ref cycle, ref suite, FWR.Editors.SuiteEdit.EditState.New);
+            Editors.SuiteEdit newSuiteWindow = new Editors.SuiteEdit(ref cycle, ref suite, FWR.Editors.SuiteEdit.EditState.New);
             newSuiteWindow.ShowDialog();
             if (suite.Status == Const.Status.New)
             {
+                suite.cycle = cycle;
                 cycle.Suites = cycle.Suites ?? new List<Suite>();
                 cycle.Suites.Add(suite);
                 AddSuiteToCycleUiObject(cycle, suite);
@@ -330,6 +363,7 @@ namespace FWR
             newSuiteObject.Name = StringHandlers.CleanName(Const.cycleBodySuite + cycle.Name + suite.Name);
             newSuiteObject.nameLabel.Content = suite.Name;
             suite.suiteInCycleControl = newSuiteObject;
+            suite.cycle = cycle;
 
             cycleBodyObj.Children.Add(newSuiteObject);
 
@@ -341,6 +375,7 @@ namespace FWR
 
         private void AddTestToCycleSuiteUiObject(SuiteInCycleControl suiteObject, Test test)
         {
+            test.suite = suiteObject.GetSuite();
             var newTestObject = new TestInSuiteInQueueControl(suiteObject.GetSuite(), test);
             newTestObject.Name = StringHandlers.CleanName(Const.TestInSuiteUiObj + test.ID);
             newTestObject.nameLabel.Content = test.Name;
@@ -391,16 +426,21 @@ namespace FWR
         public void StyleControl(string controlName, string propertyName, Object controlPropertyToSet)
         {
             var obj = ObjectsHandlers.FindChildObjectInObject<Control>(this).First(x => x.Name == controlName);
+            StyleControl(obj, propertyName, controlPropertyToSet);
+        }
 
+        public void StyleControl(Control control, string propertyName, Object controlPropertyToSet)
+        {
             lock (formLock)
             {
                 this.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, new Action(() =>
                 {
-                    PropertyInfo pInfo = obj.GetType().GetProperty(propertyName);
+                    PropertyInfo pInfo = control.GetType().GetProperty(propertyName);
                     TypeConverter tc = TypeDescriptor.GetConverter(pInfo.PropertyType);
-                    pInfo.SetValue(obj, controlPropertyToSet);
+                    pInfo.SetValue(control, controlPropertyToSet);
                 }));
             }
         }
+
     }
 }

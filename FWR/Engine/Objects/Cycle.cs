@@ -20,6 +20,8 @@ namespace FWR.Engine
         public Thread CycleWorker { get; set; }
         public int TotalSecondsRunning { get; set; }
         public string LogFilePath { get; set; }
+        public bool needUiUpdate { get; set; } = false;
+
 
         public ListView CycleUiObject { get; set; }
 
@@ -46,5 +48,9 @@ namespace FWR.Engine
             return true;
         }
 
+        public void SetNeedUiUpdate()
+        {
+            needUiUpdate = true;
+        }
     }
 }

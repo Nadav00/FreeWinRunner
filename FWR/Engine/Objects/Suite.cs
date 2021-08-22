@@ -18,6 +18,8 @@ namespace FWR.Engine
         public Const.Result Result { get; set; } = Const.Result.New;
         public int TotalSecondsRunning { get; set; }
         public string logFilePath { get; set; }
+        public bool needUiUpdate { get; set; } = false;
+        public Cycle cycle { get; set; } 
 
         public SuiteInCycleControl suiteInCycleControl { get; set; }
 
@@ -67,5 +69,10 @@ namespace FWR.Engine
             return null;
         }
 
+        public void SetNeedUiUpdate()
+        {
+            needUiUpdate = true;
+            cycle.SetNeedUiUpdate();
+        }
     }
 }

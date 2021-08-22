@@ -43,7 +43,7 @@ namespace FWR.Engine
         }
 
         static public string cycleNamePrefix = "cycleName";
-        static public string cycleObject = "cycleObject";
+        static public string cycleUiObject = "cycleObject";
         static public string addSuiteButton = "add";
         static public string newSuiteButton = "newSuiteButton";
         static public string cycleExpander = "cycleExpander";

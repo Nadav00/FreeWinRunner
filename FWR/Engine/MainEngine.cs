@@ -106,20 +106,15 @@ namespace FWR.Engine
                         cycle.Status = Const.Status.Running;
 
                         int ID = cycle.ID;
-                        string controlName = Const.cycleObject + ID;
-
-                        FORM.Dispatcher.Invoke(IDLE, new Action(delegate () { StyleControl(controlName, "Background", LBLUE); }));
+                        string cycleControlName = Const.cycleUiObject + ID;
 
                         foreach (Suite suite in cycle.Suites ?? new List<Suite>())
                             if (Startable.Contains(suite.Status))
-                            {
                                 suite.Status = Const.Status.Running;
-                                FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(suite.suiteInCycleControl.Name, "Background", LBLUE); }));
-                            }
-                        
 
                         cycle.CycleWorker = new Thread(() => CycleWorkerThread(cycle));
                         cycle.CycleWorker.Name = cycle.Name + "_RunThread";
+                        cycle.SetNeedUiUpdate();
                         cycle.CycleWorker.Start();
                     }
                 }
@@ -162,13 +157,13 @@ namespace FWR.Engine
                         if (suite.TotalPassTests() == suite.Tests.Count)
                         {
                             suite.Result = Const.Result.Pass;
-                            FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(suite.suiteInCycleControl.Name, "Background", GREEN); }));
                         }
                         else
                         {
                             suite.Result = Const.Result.NotPass;
-                            FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(suite.suiteInCycleControl.Name, "Background", ORANGE); }));
                         }
+
+                        suite.SetNeedUiUpdate();
                     }
                 }
 
@@ -176,15 +171,9 @@ namespace FWR.Engine
                 {
                     cycle.Status = Const.Status.Finished;
                     if (cycle.AllSuitesPass())
-                    {
                         cycle.Result = Const.Result.Pass;
-                        FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(cycle.CycleUiObject.Name, "Background", GREEN); }));
-                    }
                     else
-                    {
                         cycle.Result = Const.Result.NotPass;
-                        FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(cycle.CycleUiObject.Name, "Background", ORANGE); }));
-                    }
                 }
 
                 Thread.Sleep(1000);
@@ -195,8 +184,6 @@ namespace FWR.Engine
         {
             if (test != null)
             {
-                FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(test.testInSuiteInQueueControl.Name, "Background", LBLUE); }));
-
                 test.Status = Const.Status.Running;
                 string taskName = "CYCLE_" + cycle.ID + "_SUITE_" + StringHandlers.CleanName(suite.Name) + "_TEST_" + test.ID;
                 test.logFilePath = Path.Combine(Path.GetTempPath(), "FWR", taskName + "-" + StringHandlers.ShortDateTimeString(DateTime.Now) + ".log");
@@ -223,6 +210,8 @@ namespace FWR.Engine
                 {
                     test.testInSuiteInQueueControl.exeWindowGrid.Children.Add(ChildWindowHandler.SetProcessAsChildOfPanelControl(_childp, 800, 400, test));
                 }));
+
+                test.SetUiNeedUpdate();
             }
         }
 
@@ -230,17 +219,11 @@ namespace FWR.Engine
         {
             if (test.ShellProcess.ExitCode == 0)
             {
-                FORM.Dispatcher.Invoke(IDLE, new Action(delegate () { StyleControl(test.testInSuiteInQueueControl.Name, "Background", GREEN); }));
-
                 test.Result = Const.Result.Pass;
-
-                FORM.Dispatcher.Invoke(HIGH, new Action(delegate () { StyleControl(test.testInSuiteInQueueControl.Name, "Background", GREEN); }));
             }
             else
             {
                 test.Result = Const.Result.Fail;
-
-                FORM.Dispatcher.Invoke(IDLE, new Action(delegate () { StyleControl(test.testInSuiteInQueueControl.Name, "Background", RED); }));
 
                 using (var reader = new StreamReader(test.logFilePath + ".err"))
                 {
@@ -254,8 +237,6 @@ namespace FWR.Engine
                         test.Error = error1;
                     }
                 }
-
-                FORM.Dispatcher.Invoke(HIGH, new Action(delegate (){StyleControl(test.testInSuiteInQueueControl.Name, "Background", RED);}));
             }
 
             test.ShellProcess.Exited -= (sender, e) => { End_Test(test); };
@@ -271,19 +252,7 @@ namespace FWR.Engine
             }));
 
             test.WindowsFormsHostControl = null;
-        }
-
-        private void StyleControl(string controlName, string controlPropertyName, Object controlPropertyToSet)
-        {
-            FORM.InvalidateVisual();
-
-            FORM.Dispatcher.Invoke(IDLE, new Action(() =>
-            {
-                var obj = ObjectsHandlers.FindChildObjectInObject<Control>(FORM).First(x => x.Name == controlName);
-                PropertyInfo pInfo = obj.GetType().GetProperty(controlPropertyName);
-                TypeConverter tc = TypeDescriptor.GetConverter(pInfo.PropertyType);
-                pInfo.SetValue(obj, controlPropertyToSet);
-            }));
+            test.SetUiNeedUpdate();
         }
     }
 }

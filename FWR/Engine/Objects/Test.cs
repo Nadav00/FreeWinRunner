@@ -10,6 +10,8 @@ namespace FWR.Engine
         public WindowsFormsHost WindowsFormsHostControl { get; set; }
         public Process ShellProcess { get; set; }
         public TestInSuiteInQueueControl testInSuiteInQueueControl { get; set; }
+        public Suite suite { get; set; }
+
 
         public Const.TestType Type { get; set; } = Const.TestType.Normal;
         public Const.Status Status { get; set; } = Const.Status.New;
@@ -28,5 +30,13 @@ namespace FWR.Engine
 
         public int TotalSecondsRunning { get; set; }
         public string logFilePath { get; set; }
+
+        public bool needUiUpdate { get; set; }
+
+        public void SetUiNeedUpdate()
+        {
+            needUiUpdate = true;
+            suite.SetNeedUiUpdate();
+        }
     }
 }
