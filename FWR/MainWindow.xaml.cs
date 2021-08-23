@@ -30,9 +30,10 @@ namespace FWR
         private List<UiTodoListItem> uiTodoList = new List<UiTodoListItem>();
         private string logPath = Path.Combine(Path.GetTempPath(), "FWR");
         private Log log = new Log(Path.Combine(Path.GetTempPath(), "FWR", "MainWindow.log"));
-        private readonly Object formLock = new Object();
 
+        private readonly Object formLock = new Object();
         private bool needLastUiUpdate;
+        private double timesUpdated = 0;
 
         public class UiTodoListItem
         {
@@ -52,7 +53,6 @@ namespace FWR
             Add_Timer();
             log.Info("Added timer");
             log.Info("--------------------------");
-
         }
 
         private void InitializeObjects()
@@ -69,62 +69,6 @@ namespace FWR
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += new EventHandler(UiUpdateRunner);
             timer.Start();
-        }
-
-        void UiUpdateRunner(object sender, EventArgs e)
-        {
-            StatusLabel.Content = Runtime.status.ToString();
-            if (!StatusLabel.Content.ToString().ToUpper().Contains("RUNNING"))
-                StatusLabel.Foreground = new SolidColorBrush(Colors.Black);
-
-            if (Runtime.status == Const.Status.Running || needLastUiUpdate)
-            {
-                totalSecondsRunning++;
-                TimeLabel.Content = StringHandlers.IntSecondsToHhMmSsString(totalSecondsRunning);
-                foreach (Cycle cycle in Runtime.queue.Cycles)
-                {
-                    int ID = cycle.ID;
-                    Label timeCaptionLabelObj = ObjectsHandlers.FindChildObjectInObject<Label>(this).First(x => x.Name == Const.cycleTimeCaptionLabel + ID);
-                    timeCaptionLabelObj.Content = StringHandlers.IntSecondsToHhMmSsString(cycle.TotalSecondsRunning);
-
-                    foreach (Suite suite in cycle.Suites)
-                    {
-                        if (suite.needUiUpdate)
-                            suite.suiteInCycleControl.statusLabel.Content = suite.Status.ToString();
-
-                        foreach (Test test in suite.Tests)
-                            if (test.needUiUpdate)
-                                UpdateTestUi(test);
-                    }
-                }
-
-                if (Runtime.status != Const.Status.Running)
-                    needLastUiUpdate = false;
-            }
-        }
-
-        public void UpdateTestUi(Test test)
-        {
-            Color color = new Color();
-
-            switch (test.Status)
-            {
-                case Const.Status.Running:
-                    color = Colors.CornflowerBlue;
-                    break;
-                case Const.Status.Finished:
-                    if (test.Result == Const.Result.Pass)
-                        color = Colors.Green;
-                    else
-                        color = Colors.Red;
-                    break;
-                default:
-                    break;
-            }
-
-            SolidColorBrush brush = new SolidColorBrush(color);
-
-            StyleControl(test.testInSuiteInQueueControl.Name, "Background", brush);
         }
 
         public void AddToTodoList(string controlName, string propertyName, object valuePropertyToSet)
@@ -323,7 +267,7 @@ namespace FWR
             if (_suiteJsonFilePath?.Length > 1)
             {
                 Suite suite = JsonConvert.DeserializeObject<Suite>(File.ReadAllText(_suiteJsonFilePath));
-                
+
                 if (suite.Status == Const.Status.New)
                 {
                     suite.cycle = cycle;
@@ -414,7 +358,6 @@ namespace FWR
             QueueObj.Items.Clear();
             Runtime.queue = new Queue();
             Runtime.queue.Cycles = new List<Cycle>();
-
         }
 
         private void View_DB(object sender, RoutedEventArgs e)
@@ -441,6 +384,5 @@ namespace FWR
                 }));
             }
         }
-
     }
 }

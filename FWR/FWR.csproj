@@ -93,6 +93,7 @@
     <Compile Include="Auxilary\Config.cs" />
     <Compile Include="Auxilary\FileSystemPickers.cs" />
     <Compile Include="Auxilary\StringHandlers.cs" />
+    <Compile Include="MainWindowControlsUiSet.cs" />
     <Compile Include="UI_Controls\SuiteInCycleControl.xaml.cs">
       <DependentUpon>SuiteInCycleControl.xaml</DependentUpon>
     </Compile>

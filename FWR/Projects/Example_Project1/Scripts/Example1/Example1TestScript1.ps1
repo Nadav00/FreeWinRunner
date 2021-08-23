@@ -6,6 +6,8 @@ Write-Output 'Hello World'
 
 $loops = Get-Random -Maximum 5
 
+$loops = $loops + 5
+
 For ($i=0; $i -le $loops; $i++) {
 		Write-Output "$i / $loops"
         Sleep 1
