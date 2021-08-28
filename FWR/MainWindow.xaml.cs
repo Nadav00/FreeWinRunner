@@ -59,6 +59,7 @@ namespace FWR
         {
             if (!Directory.Exists(logPath))
                 Directory.CreateDirectory(logPath);
+
             Runtime.resources = Engine.Resources.LoadResources.PerformLoadResources();
             Runtime.SetMainWindow(this);
         }
@@ -114,6 +115,7 @@ namespace FWR
             {
                 Queue queue = JsonConvert.DeserializeObject<Queue>(File.ReadAllText(_cycleJsonFilePath));
                 NameTextBox.Text = queue.Name;
+                Runtime.queue.Name = queue.Name;
 
                 foreach (Cycle cycle in queue.Cycles ?? new List<Cycle>())
                 {

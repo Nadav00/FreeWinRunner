@@ -119,9 +119,7 @@ namespace FWR
                     return;
             }
 
-            SolidColorBrush brush = new SolidColorBrush(color);
-
-            StyleControl(test.testInSuiteInQueueControl.Name, "Background", brush);
+            StyleControl(test.testInSuiteInQueueControl.Name, "Background", new SolidColorBrush(color));
         }
     }
 }

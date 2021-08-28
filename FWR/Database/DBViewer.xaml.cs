@@ -10,7 +10,9 @@ namespace FWR.Database
         public DBViewer()
         {
             InitializeComponent();
-            myDB = new Database("/FreeWinRunner/FWR/FWR.db");
+
+            var result =  Database.Instance.ExecuteToDB($"Select * FROM {new Tables.TestResults().TableName}");
+                        
         }
     }
 }

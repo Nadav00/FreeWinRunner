@@ -11,8 +11,14 @@ namespace FWR.UI_Aux
 
         public static string CleanName(string originalString)
         {
-            return originalString.Replace(" ", "_").Replace("\r","").Replace("\n","");
+            return NoLineFeed(originalString.Replace(" ", "_"));
         }
+
+        public static string NoLineFeed(string originalString)
+        {
+            return originalString.Replace("\r", "").Replace("\n", "");
+        }
+
 
         public static string IntSecondsToHhMmSsString(int seconds)
         {

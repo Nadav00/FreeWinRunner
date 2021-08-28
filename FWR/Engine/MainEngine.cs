@@ -1,14 +1,9 @@
 ﻿using FWR.UI_Aux;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Threading;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 
 namespace FWR.Engine
@@ -18,15 +13,9 @@ namespace FWR.Engine
         private Thread MAINTHRD;
         private Log log;
         MainWindow FORM;
+        private Database.Database database = new Database.Database("SAFE");
 
         private System.Windows.Threading.DispatcherPriority IDLE = System.Windows.Threading.DispatcherPriority.ApplicationIdle;
-        private System.Windows.Threading.DispatcherPriority HIGH = System.Windows.Threading.DispatcherPriority.Send;
-
-
-        SolidColorBrush RED = new SolidColorBrush(Colors.Red);
-        SolidColorBrush GREEN = new SolidColorBrush(Colors.Green);
-        SolidColorBrush LBLUE = new SolidColorBrush(Colors.CornflowerBlue);
-        SolidColorBrush ORANGE = new SolidColorBrush(Colors.Orange);
 
         private List<Const.Status> Startable = new List<Const.Status>()
         {
@@ -46,7 +35,6 @@ namespace FWR.Engine
             Const.Status.Terminated,
             Const.Status.Finished
         };
-
 
         public void StartRun()
         {
@@ -210,8 +198,6 @@ namespace FWR.Engine
                 {
                     test.testInSuiteInQueueControl.exeWindowGrid.Children.Add(ChildWindowHandler.SetProcessAsChildOfPanelControl(_childp, 800, 400, test));
                 }));
-
-                test.SetUiNeedUpdate();
             }
         }
 
@@ -224,18 +210,13 @@ namespace FWR.Engine
             else
             {
                 test.Result = Const.Result.Fail;
+                test.Error = "FREEWINRUNNER UNKNOWN ERROR";
 
                 using (var reader = new StreamReader(test.logFilePath + ".err"))
                 {
-                    string error1 = reader.ReadLine();
-                    try
-                    {
-                        test.Error = reader.ReadLine().Split(':')[1];
-                    }
-                    catch
-                    {
-                        test.Error = error1;
-                    }
+                    test.Error = reader.ReadLine();
+                    try {test.Error = reader.ReadLine().Split(':')[1];}
+                    catch {}
                 }
             }
 
@@ -244,15 +225,21 @@ namespace FWR.Engine
             test.ShellProcess.Close();
             test.ShellProcess = null;
 
-            FORM.Dispatcher.Invoke(IDLE, new Action(delegate ()
-            {
+            FORM.Dispatcher.Invoke(IDLE, new Action(delegate () {
                 test.testInSuiteInQueueControl.exeWindowGrid.Children.Remove(test.WindowsFormsHostControl);
                 test.testInSuiteInQueueControl.expander.IsExpanded = false;
                 test.testInSuiteInQueueControl.Height = 30;
             }));
 
             test.WindowsFormsHostControl = null;
+            UpdateDbTestEnd(test);
             test.SetUiNeedUpdate();
+        }
+
+        private void UpdateDbTestEnd(Test test)
+        {
+             var values = new[] {"GETDATE()" , Runtime.queue.Name, test.suite.cycle.Name, test.suite.Name,test.Name, test.ConfigurationFilePath, ((int)test.Result).ToString()};
+            Database.Database.Instance.InsertToTable(new Database.Tables.TestResults(), values);
         }
     }
 }

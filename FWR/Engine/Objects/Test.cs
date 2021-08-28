@@ -7,11 +7,16 @@ namespace FWR.Engine
 {
     public class Test
     {
+        public void SetUiNeedUpdate()
+        {
+            needUiUpdate = true;
+            suite.SetNeedUiUpdate();
+        }
+
         public WindowsFormsHost WindowsFormsHostControl { get; set; }
         public Process ShellProcess { get; set; }
         public TestInSuiteInQueueControl testInSuiteInQueueControl { get; set; }
         public Suite suite { get; set; }
-
 
         public Const.TestType Type { get; set; } = Const.TestType.Normal;
         public Const.Status Status { get; set; } = Const.Status.New;
@@ -26,6 +31,7 @@ namespace FWR.Engine
         public bool Activated { get; set; }
 
         public string ScriptPath { get; set; }
+        public string ConfigurationFilePath { get; set; }
         public List<Resource> Resources { get; set; }
 
         public int TotalSecondsRunning { get; set; }
@@ -33,10 +39,6 @@ namespace FWR.Engine
 
         public bool needUiUpdate { get; set; }
 
-        public void SetUiNeedUpdate()
-        {
-            needUiUpdate = true;
-            suite.SetNeedUiUpdate();
-        }
+        public long dbRowId { get; set; }
     }
 }
