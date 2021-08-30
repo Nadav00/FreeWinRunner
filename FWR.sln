@@ -9,6 +9,8 @@ Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "FwrPsProject", "FwrPsProjec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keys", "Keys\Keys.csproj", "{57C3A34B-331E-4CD2-95B5-23153D77AF84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FWR-Web", "FWR-Web\FWR-Web.csproj", "{87B273E7-3DC8-4D0A-B7C1-ECC513DD356C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{57C3A34B-331E-4CD2-95B5-23153D77AF84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57C3A34B-331E-4CD2-95B5-23153D77AF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57C3A34B-331E-4CD2-95B5-23153D77AF84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87B273E7-3DC8-4D0A-B7C1-ECC513DD356C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87B273E7-3DC8-4D0A-B7C1-ECC513DD356C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87B273E7-3DC8-4D0A-B7C1-ECC513DD356C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87B273E7-3DC8-4D0A-B7C1-ECC513DD356C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

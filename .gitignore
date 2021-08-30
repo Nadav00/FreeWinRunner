@@ -7,3 +7,5 @@ FWR.db
 Keys/bin/
 Keys/obj/
 FWR/Engine/MainEngine.cs~RF2d0aa6ec.TMP
+FWR-Web/bin/
+packages/
