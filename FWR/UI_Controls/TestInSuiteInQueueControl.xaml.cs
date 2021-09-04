@@ -23,8 +23,7 @@ namespace FWR.UI_Controls
         public TestInSuiteInQueueControl(Suite suite, Test test)
         {
             _test = test;
-            _test.ID = new Random().Next(0, int.MaxValue);
-            Thread.Sleep(10);
+            _test.ID = Runtime.GetNextTotalTests();
             _suite = suite;
             InitializeComponent();
         }

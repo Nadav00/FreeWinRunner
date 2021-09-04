@@ -23,7 +23,7 @@ namespace FWR.Database.Tables
                 {"SUITE_NAME", "varchar(255)" },
                 {"TEST_NAME", "varchar(255)" },
                 {"CONFIGURATION_NAME", "varchar(255)" },
-                {"RESULT", "INT" },
+                {"RESULT", "varchar(255)" },
                 {"RUNTIME_SECONDS", "BIGINT" },
                 {"LOG_ARTIFACTS_FOLDER_ID", "BIGINT" },
                 {"ERROR_MESSAGE", "varchar(255)" },

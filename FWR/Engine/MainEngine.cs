@@ -39,6 +39,7 @@ namespace FWR.Engine
         public void StartRun()
         {
             FORM = Runtime.GetMainWindow();
+            Runtime.QueueRunUniqueName = StringHandlers.CleanName(Runtime.queue.Name)  + StringHandlers.CompactDateTimeString(DateTime.Now) + new Random().Next(0,99);
             string logPath = StringHandlers.CleanName(FORM.NameTextBox.Text + "MainEngine.log");
             log = new Log(Path.Combine(Path.GetTempPath(), "FWR", logPath));
 
@@ -238,7 +239,7 @@ namespace FWR.Engine
 
         private void UpdateDbTestEnd(Test test)
         {
-             var values = new[] {"GETDATE()" , Runtime.queue.Name, test.suite.cycle.Name, test.suite.Name,test.Name, test.ConfigurationFilePath, ((int)test.Result).ToString()};
+             var values = new[] {"GETDATE()" , Runtime.QueueRunUniqueName, test.suite.cycle.Name, test.suite.Name,test.Name, test.ConfigurationFilePath, test.Result.ToString()};
             Database.Database.Instance.InsertToTable(new Database.Tables.TestResults(), values);
         }
     }

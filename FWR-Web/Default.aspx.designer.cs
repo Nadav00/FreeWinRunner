@@ -13,6 +13,15 @@ namespace FWR_Web {
     public partial class _Default {
         
         /// <summary>
+        /// headerListVeiw control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ListView headerListVeiw;
+        
+        /// <summary>
         /// btnLogin control.
         /// </summary>
         /// <remarks>
@@ -20,5 +29,14 @@ namespace FWR_Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnLogin;
+        
+        /// <summary>
+        /// RunsGridView control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView RunsGridView;
     }
 }

@@ -1,0 +1,7 @@
+﻿tr, td {
+	border: 1px solid black;
+}
+
+	tr.header {
+		cursor: pointer;
+	}

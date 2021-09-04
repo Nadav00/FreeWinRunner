@@ -4,11 +4,13 @@ namespace FWR.Engine
 {
     public static class Runtime
     {
+        public static string QueueRunUniqueName { get; set; }
         public static Queue queue = new Queue();
         public static Config config { get; set; } = new Config();
         public static List<Resource> resources;
         public static MainEngine engine = new MainEngine();
         public static Const.Status status = Const.Status.New;
+        public static int TotalTests { get; set; } = 0;
 
         private static MainWindow _mainwindow;
 
@@ -27,6 +29,11 @@ namespace FWR.Engine
         public static MainWindow GetMainWindow()
         {
             return _mainwindow;
+        }
+
+        public static int GetNextTotalTests()
+        {
+            return TotalTests++;
         }
     }
 }

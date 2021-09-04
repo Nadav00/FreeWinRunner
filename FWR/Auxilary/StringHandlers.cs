@@ -30,5 +30,10 @@ namespace FWR.UI_Aux
         {
             return dateTime.ToString(@"dd_MM-hh_mm");
         }
+
+        public static string CompactDateTimeString(DateTime dateTime)
+        {
+            return dateTime.ToString(@"ddMMhhmm");
+        }
     }
 }
