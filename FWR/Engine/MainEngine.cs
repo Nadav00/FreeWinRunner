@@ -39,7 +39,7 @@ namespace FWR.Engine
         public void StartRun()
         {
             FORM = Runtime.GetMainWindow();
-            Runtime.QueueRunUniqueName = StringHandlers.CleanName(Runtime.queue.Name)  + StringHandlers.CompactDateTimeString(DateTime.Now) + new Random().Next(0,99);
+            Runtime.QueueRunUniqueName = StringHandlers.CleanName(Runtime.queue.Name)  + "-" + StringHandlers.CompactDateTimeString(DateTime.Now) + new Random().Next(0,99);
             string logPath = StringHandlers.CleanName(FORM.NameTextBox.Text + "MainEngine.log");
             log = new Log(Path.Combine(Path.GetTempPath(), "FWR", logPath));
 

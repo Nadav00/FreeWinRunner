@@ -6,8 +6,8 @@ namespace FWR.Database.Tables
 {
     public class Table
     {
-        public string TableName;
-        public Dictionary<string,string> Columns;
+        public string TableName { get; set; }
+        public Dictionary<string,string> Columns { get; set; }
     }
 
     public class TestResults : Table
