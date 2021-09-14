@@ -7,39 +7,8 @@
 		<p><asp:GridView ID="RunsGridView" runat="server"></asp:GridView> 
 	</div>
 
-    	<div><asp:ListView runat="server" ID="headerListVeiw"></asp:ListView>	</div>
+    <div><asp:ListView runat="server" ID="headerListVeiw"></asp:ListView>	</div>
 
-	<div>
-		<link rel="stylesheet" href="Default.css" type="text/css" />
-		<table border="0">
-		  <tr  class="header">
-			<td colspan="2">Header</td>
-		  </tr>
-		  <tr>
-			<td>data</td>
-			<td>data</td>
-		  </tr>
-		  <tr>
-			<td>data</td>
-			<td>data</td>
-		  </tr>
-		  <tr  class="header">
-			<td colspan="2">Header</td>
-		  </tr>
-		  <tr>
-			<td>date</td>
-			<td>data</td>
-		  </tr>
-		  <tr>
-			<td>data</td>
-			<td>data</td>
-		  </tr>
-		  <tr>
-			<td>data</td>
-			<td>data</td>
-		  </tr>
-		</table>
-	</div>
 	<script src="\Scripts\jquery-3.3.1.js" type="text/javascript"></script>
 	<script  type="text/javascript">
 		$('.header').click(function(){

@@ -13,7 +13,7 @@ namespace FWR_Web
 {
     public partial class _Default : Page
     {
-        private string clsoeTable = "</table>";
+        private string endTable = "</table>";
         private string htmlToPresent;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -58,12 +58,14 @@ namespace FWR_Web
                 {
                     if (lastQueue != string.Empty)
                     {
-                        lastCycle = "NewCycle";
-                        cycleHtml += Environment.NewLine + clsoeTable; //queue
+                        lastCycle = string.Empty;
+                        lastSuite = string.Empty;
+
+                        cycleHtml += Environment.NewLine + endTable + "<!-- 1 -->"; //queue
+                        cycleHtml += Environment.NewLine + endTable + "<!-- 2 -->"; //queue
                     }
 
                     lastQueue = entryQueue.ToString();
-                    lastSuite = entrySuite.ToString();
 
                     returnString += cycleHtml;
 
@@ -75,7 +77,7 @@ namespace FWR_Web
                 {
                     if (!lastCycle.Equals(string.Empty))
                     {
-                        cycleHtml += clsoeTable; //cycle
+                      cycleHtml += endTable + "<!-- 2 -->"; //cycle
                     }
 
                     lastCycle = entryCycle.ToString();
@@ -84,15 +86,30 @@ namespace FWR_Web
                     $"    <tr><td><table style=\"width: 100 %; background-color:black;color:white\" border=\"0\"> <tr class=\"header\"> <td colspan=\"1\"> Cycle:{lastCycle}</td></tr>";
                 }
 
+                if (!entrySuite.Equals(lastSuite))
+                {
+                    if (!lastSuite.Equals(string.Empty))
+                    {
+                        cycleHtml += endTable + "<!-- 3 -->"; //cycle
+                    }
+
+                    lastSuite = entrySuite.ToString();
+
+                    cycleHtml += Environment.NewLine +
+                    $"      <tr><td><table style=\"width: 100 %; background-color:blue;color:white\" border=\"0\"> <tr class=\"header\"> <td colspan=\"1\"> Suite:{lastSuite}</td></tr>";
+                }
+
                 cycleHtml += Environment.NewLine +
-                $"        <tr style=\"background-color:yellowgreen; color:white;\"><td> Entry:{entryQueue},{entryCycle},{entrySuite},{entryTest} </td></tr>";
+                $"          <tr style=\"background-color:yellowgreen; color:white;\"><td> Entry:{entrySuite},{entryTest} </td></tr>";
             }
 
-            cycleHtml += Environment.NewLine + clsoeTable; //queue
+
+            cycleHtml += Environment.NewLine + endTable + "<!-- 4 -->"; //suite
+            cycleHtml += Environment.NewLine + endTable + "<!-- 5 -->"; //cycle
 
             returnString += cycleHtml;
 
-
+            returnString += Environment.NewLine + endTable + "<!-- 6 -->"; //queue
 
             return returnString;
         }

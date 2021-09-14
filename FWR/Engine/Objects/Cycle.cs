@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,12 +18,18 @@ namespace FWR.Engine
         public bool Active { get; set; }
         public Const.Status Status { get; set; } = Const.Status.New;
         public Const.Result Result { get; set; } = Const.Result.New;
+
+        [JsonIgnore]
         public Thread CycleWorker { get; set; }
+
         public int TotalSecondsRunning { get; set; }
         public string LogFilePath { get; set; }
+
+        [JsonIgnore]
         public bool needUiUpdate { get; set; } = false;
 
 
+        [JsonIgnore]
         public ListView CycleUiObject { get; set; }
 
         public Cycle(string name)

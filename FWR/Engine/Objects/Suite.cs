@@ -1,4 +1,5 @@
 ﻿using FWR.UI_Controls;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,14 @@ namespace FWR.Engine
         public Const.Result Result { get; set; } = Const.Result.New;
         public int TotalSecondsRunning { get; set; }
         public string logFilePath { get; set; }
-        public bool needUiUpdate { get; set; } = false;
-        public Cycle cycle { get; set; } 
 
+        [JsonIgnore]
+        public bool needUiUpdate { get; set; } = false;
+
+        [JsonIgnore]
+        public Cycle cycle { get; set; }
+
+        [JsonIgnore]
         public SuiteInCycleControl suiteInCycleControl { get; set; }
 
         public Test GetRunningTest()

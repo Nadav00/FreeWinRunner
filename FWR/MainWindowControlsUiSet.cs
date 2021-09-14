@@ -57,7 +57,7 @@ namespace FWR
         private void MarkAllNeedUpdate()
         {
             foreach (Cycle cycle in Runtime.queue.Cycles)
-                foreach (Suite suite in cycle.Suites)
+                foreach (Suite suite in cycle.Suites ?? new System.Collections.Generic.List<Suite>())
                     foreach (Test test in suite.Tests)
                         test.SetUiNeedUpdate();
         }
