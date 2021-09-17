@@ -62,7 +62,8 @@ namespace FWR_Web
                         lastSuite = string.Empty;
 
                         cycleHtml += Environment.NewLine + endTable + "<!-- 1 -->"; //queue
-                        cycleHtml += Environment.NewLine + endTable + "<!-- 2 -->"; //queue
+                        cycleHtml += Environment.NewLine + endTable + "<!-- 2 -->"; //cycle
+                        cycleHtml += Environment.NewLine + endTable + "<!-- 22 -->"; //suite
                     }
 
                     lastQueue = entryQueue.ToString();
@@ -77,8 +78,10 @@ namespace FWR_Web
                 {
                     if (!lastCycle.Equals(string.Empty))
                     {
-                      cycleHtml += endTable + "<!-- 2 -->"; //cycle
+                      cycleHtml += endTable + "<!-- 222 -->"; //cycle
                     }
+
+                    lastSuite = string.Empty;
 
                     lastCycle = entryCycle.ToString();
 
@@ -110,6 +113,8 @@ namespace FWR_Web
             returnString += cycleHtml;
 
             returnString += Environment.NewLine + endTable + "<!-- 6 -->"; //queue
+            returnString += Environment.NewLine + endTable + "<!-- 6 -->"; //queue
+
 
             return returnString;
         }
