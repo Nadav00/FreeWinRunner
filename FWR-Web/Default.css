@@ -1,7 +1,12 @@
 ﻿tr, td {
-	border: 1px solid black;
+    border: 1px solid black;
 }
 
-	tr.header {
-		cursor: pointer;
-	}
+tr.header 
+{
+    cursor: pointer;
+}
+
+html {
+    visibility: hidden;
+}

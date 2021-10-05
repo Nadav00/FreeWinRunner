@@ -52,7 +52,13 @@ namespace FWR_Web
                 var entryQueue = dataRow[2];
                 var entryCycle = dataRow[3];
                 var entrySuite = dataRow[4];
-                var entryTest = dataRow[5];
+                var entryTestName = dataRow[5];
+
+                FWR.Engine.Test curTest = new FWR.Engine.Test
+                {
+                    Name = entryTestName.ToString(),
+                    Result = (FWR.Engine.Const.Result) Enum.Parse(typeof(FWR.Engine.Const.Result), dataRow[7].ToString(), true),
+                };
 
                 if (!entryQueue.Equals(lastQueue))
                 {
@@ -63,7 +69,7 @@ namespace FWR_Web
 
                         cycleHtml += Environment.NewLine + endTable + "<!-- 1 -->"; //queue
                         cycleHtml += Environment.NewLine + endTable + "<!-- 2 -->"; //cycle
-                        cycleHtml += Environment.NewLine + endTable + "<!-- 22 -->"; //suite
+                        cycleHtml += Environment.NewLine + endTable + "<!-- 3 -->"; //suite
                     }
 
                     lastQueue = entryQueue.ToString();
@@ -71,14 +77,14 @@ namespace FWR_Web
                     returnString += cycleHtml;
 
                     cycleHtml = Environment.NewLine +
-                    $"<table style=\"width: 100 %; background-color:gold;\" border=\"0\"> <tr class=\"header\"> <td colspan=\"1\"> RUN:{lastQueue}</td></tr>";
+                    $"<table data-toggle=\"toggle\" style=\"width: 100 %; background-color:gold;\" border=\"0\"> <tr class=\"header\"> <td colspan=\"1\"> RUN:{lastQueue}</td></tr>";
                 }
 
                 if (!entryCycle.Equals(lastCycle))
                 {
                     if (!lastCycle.Equals(string.Empty))
                     {
-                      cycleHtml += endTable + "<!-- 222 -->"; //cycle
+                      cycleHtml += endTable + "<!-- 4 -->"; //cycle
                     }
 
                     lastSuite = string.Empty;
@@ -86,35 +92,34 @@ namespace FWR_Web
                     lastCycle = entryCycle.ToString();
 
                     cycleHtml += Environment.NewLine +
-                    $"    <tr><td><table style=\"width: 100 %; background-color:black;color:white\" border=\"0\"> <tr class=\"header\"> <td colspan=\"1\"> Cycle:{lastCycle}</td></tr>";
+                    $"    <tr><td><table style=\"width: 100 %; background-color:black;color:white\" border=\"0\"> <tr class=\"header hidetr\" > <td colspan=\"1\"> Cycle:{lastCycle}</td></tr>";
                 }
 
                 if (!entrySuite.Equals(lastSuite))
                 {
                     if (!lastSuite.Equals(string.Empty))
                     {
-                        cycleHtml += endTable + "<!-- 3 -->"; //cycle
+                        cycleHtml += endTable + "<!-- 5 -->"; //cycle
                     }
 
                     lastSuite = entrySuite.ToString();
 
                     cycleHtml += Environment.NewLine +
-                    $"      <tr><td><table style=\"width: 100 %; background-color:blue;color:white\" border=\"0\"> <tr class=\"header\"> <td colspan=\"1\"> Suite:{lastSuite}</td></tr>";
+                    $"      <tr><td><table style=\"width: 100 %; background-color:blue;color:white\" border=\"0\"> <tr class=\"header hidetr\"> <td colspan=\"1\"> Suite:{lastSuite}</td></tr>";
                 }
 
                 cycleHtml += Environment.NewLine +
-                $"          <tr style=\"background-color:yellowgreen; color:white;\"><td> Entry:{entrySuite},{entryTest} </td></tr>";
+                $"          <tr style=\"background-color:yellowgreen; color:white;\"><td> ,{entryTestName},{curTest.Result.ToString()} </td></tr>";
             }
 
 
-            cycleHtml += Environment.NewLine + endTable + "<!-- 4 -->"; //suite
-            cycleHtml += Environment.NewLine + endTable + "<!-- 5 -->"; //cycle
+            cycleHtml += Environment.NewLine + endTable + "<!-- 6 -->"; //suite
+            cycleHtml += Environment.NewLine + endTable + "<!-- 7 -->"; //cycle
 
             returnString += cycleHtml;
 
-            returnString += Environment.NewLine + endTable + "<!-- 6 -->"; //queue
-            returnString += Environment.NewLine + endTable + "<!-- 6 -->"; //queue
-
+            returnString += Environment.NewLine + endTable + "<!-- 8 -->"; //queue
+            returnString += Environment.NewLine + endTable + "<!-- 9 -->"; //table
 
             return returnString;
         }
